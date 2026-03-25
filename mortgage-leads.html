@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f2744">
 <title>MortgageLeads</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── RESET & ROOT ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,10 +37,10 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
-  --font: 'DM Sans', sans-serif;
+  --font: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
   --max-w: 430px;
-  --nav-h: 68px;
+  --nav-h: 72px;
 }
 
 html, body {
@@ -46,6 +49,7 @@ html, body {
   background: #e8edf2;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  font-size: 16px;
 }
 
 /* ── SETUP SCREEN ──────────────────────────────────────────────── */
@@ -104,8 +108,8 @@ html, body {
   z-index: 50;
 }
 .topbar-row1 { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.topbar-brand { font-size: 18px; font-weight: 600; color: #fff; letter-spacing: -0.4px; }
-.topbar-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; font-weight: 400; }
+.topbar-brand { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.4px; }
+.topbar-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; font-weight: 400; }
 .topbar-actions { display: flex; gap: 8px; }
 .tbar-btn { width: 32px; height: 32px; border-radius: 9px; background: rgba(255,255,255,0.12); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9); transition: background 0.15s; flex-shrink: 0; }
 .tbar-btn:hover { background: rgba(255,255,255,0.2); }
@@ -114,14 +118,16 @@ html, body {
 /* Stats grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: rgba(255,255,255,0.08);
   border-radius: 12px;
   overflow: hidden;
 }
 .stat-cell { background: var(--navy-mid); padding: 10px 6px; text-align: center; }
+.stat-cell.accent { background: rgba(255,255,255,0.07); }
 .stat-n { font-size: 19px; font-weight: 600; color: #fff; letter-spacing: -0.5px; }
+.stat-n.highlight { color: #7dd3fc; }
 .stat-l { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 500; }
 
 /* ── FILTER TABS ───────────────────────────────────────────────── */
@@ -130,10 +136,10 @@ html, body {
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
   flex-shrink: 0;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   border: 1.5px solid var(--border2);
   background: transparent;
@@ -164,7 +170,7 @@ html, body {
 .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-light); pointer-events: none; }
 
 /* ── LEADS LIST ────────────────────────────────────────────────── */
-.leads-list { flex: 1; padding: 4px 14px calc(var(--nav-h) + 20px); overflow-y: auto; background: var(--surface2); }
+.leads-list { flex: 1; padding: 6px 14px calc(var(--nav-h) + 30px); overflow-y: auto; background: var(--surface2); }
 .section-lbl {
   font-size: 10px;
   font-weight: 600;
@@ -209,11 +215,11 @@ html, body {
 .star-btn.on { color: #f59e0b; }
 
 .lead-info { flex: 1; min-width: 0; padding: 0 8px; }
-.lead-name { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lead-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lead-name { font-size: 15px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lead-meta { font-size: 13px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.status-pill { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.1px; }
-.reminder-pill { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: #b45309; background: #fef3c7; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.status-pill { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.1px; }
+.reminder-pill { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #b45309; background: #fef3c7; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
 .rdot { width: 5px; height: 5px; border-radius: 50%; background: #f97316; flex-shrink: 0; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
 
@@ -254,13 +260,14 @@ html, body {
   background: var(--surface);
   border-top: 1px solid var(--border);
   display: flex;
-  padding: 8px 0 max(14px, env(safe-area-inset-bottom));
+  padding: 10px 0 0;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
   z-index: 50;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
 }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: var(--font); }
-.nav-btn svg { width: 20px; height: 20px; }
-.nav-btn span { font-size: 10px; font-weight: 500; color: var(--text-muted); }
+.nav-btn svg { width: 22px; height: 22px; }
+.nav-btn span { font-size: 11px; font-weight: 600; color: var(--text-muted); }
 .nav-btn.active span { color: var(--accent); }
 
 /* FAB */
@@ -299,13 +306,13 @@ html, body {
 .set-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; border-bottom: 1px solid var(--border); gap: 12px; }
 .set-row:last-child { border-bottom: none; }
 .set-row-left { flex: 1; min-width: 0; }
-.set-row-label { font-size: 13px; font-weight: 500; color: var(--text); }
-.set-row-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.set-row-label { font-size: 15px; font-weight: 500; color: var(--text); }
+.set-row-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
 .set-input {
   flex-shrink: 0;
   border: none;
   background: transparent;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text);
   text-align: right;
   font-family: var(--font);
@@ -447,7 +454,7 @@ html, body {
   background: var(--surface);
   z-index: 1;
 }
-.modal-title { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+.modal-title { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
 .modal-close {
   width: 28px;
   height: 28px;
@@ -467,14 +474,14 @@ html, body {
 .modal-body { padding: 16px 18px; }
 
 /* Form elements */
-.fg { margin-bottom: 13px; }
-.fl { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+.fg { margin-bottom: 14px; }
+.fl { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
 .fi {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border: 1.5px solid var(--border2);
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: 15px;
   font-family: var(--font);
   color: var(--text);
   background: var(--surface2);
@@ -485,10 +492,10 @@ html, body {
 .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .fsel {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border: 1.5px solid var(--border2);
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: 15px;
   font-family: var(--font);
   color: var(--text);
   background: var(--surface2);
@@ -709,8 +716,8 @@ html, body {
 .detail-action-btn.success:hover { background: #15803d; }
 
 .detail-info { padding: 10px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-bottom: 1px solid var(--border); background: var(--surface); }
-.detail-info-item label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
-.detail-info-item span { font-size: 13px; color: var(--text); word-break: break-all; }
+.detail-info-item label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+.detail-info-item span { font-size: 15px; color: var(--text); word-break: break-all; }
 
 .status-change-row {
   padding: 10px 16px;
@@ -857,7 +864,16 @@ html, body {
 /* ── RESPONSIVE ────────────────────────────────────────────────── */
 @media (max-width: 430px) {
   .fab { right: 16px; }
-  .bottom-nav { width: 100%; }
+  .bottom-nav { width: 100%; left: 0; transform: none; }
+  #app { max-width: 100%; box-shadow: none; }
+  .modal { max-width: 100%; }
+  .frow { grid-template-columns: 1fr; }
+}
+/* iPhone notch / dynamic island */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .topbar { padding-top: max(16px, env(safe-area-inset-top)); }
+  .bottom-nav { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(var(--nav-h) + max(16px, env(safe-area-inset-bottom))); }
 }
 </style>
 </head>
@@ -927,10 +943,12 @@ html, body {
       </div>
     </div>
     <div class="stats-grid">
-      <div class="stat-cell"><div class="stat-n" id="statTotal">0</div><div class="stat-l">Total</div></div>
+      <div class="stat-cell"><div class="stat-n" id="statTotal">0</div><div class="stat-l">Total leads</div></div>
       <div class="stat-cell"><div class="stat-n" id="statActive">0</div><div class="stat-l">Active</div></div>
-      <div class="stat-cell"><div class="stat-n" id="statStarred">0</div><div class="stat-l">Starred</div></div>
       <div class="stat-cell"><div class="stat-n" id="statPipeline">$0</div><div class="stat-l">Pipeline</div></div>
+      <div class="stat-cell accent"><div class="stat-n highlight" id="stat7d">0</div><div class="stat-l">New · 7 days</div></div>
+      <div class="stat-cell accent"><div class="stat-n highlight" id="stat14d">0</div><div class="stat-l">New · 14 days</div></div>
+      <div class="stat-cell"><div class="stat-n" id="statStarred">0</div><div class="stat-l">Starred</div></div>
     </div>
   </div>
 
@@ -1042,7 +1060,7 @@ html, body {
       <svg viewBox="0 0 22 22" fill="none"><path d="M3 10.5L11 3L19 10.5V19H14V14H8V19H3V10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
       <span>Home</span>
     </button>
-    <button class="nav-btn" id="navAdd" onclick="openModal('addLeadModal')">
+    <button class="nav-btn" id="navAdd" onclick="openAddLead()">
       <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 19c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       <span>Add lead</span>
     </button>
@@ -1061,7 +1079,7 @@ html, body {
   </div>
 
   <!-- FAB -->
-  <button class="fab" id="fabBtn" onclick="openModal('addLeadModal')">
+  <button class="fab" id="fabBtn" onclick="openAddLead()">
     <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
 </div>
@@ -1072,7 +1090,7 @@ html, body {
 <div class="modal-bg" id="addLeadModal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-head"><span class="modal-title">New lead</span><button class="modal-close" onclick="closeModal('addLeadModal')">✕</button></div>
+    <div class="modal-head"><span class="modal-title" id="addLeadModalTitle">New lead</span><button class="modal-close" onclick="closeModal('addLeadModal')">✕</button></div>
     <div class="modal-body">
       <div class="frow">
         <div class="fg"><label class="fl">First name</label><input class="fi" id="fn" placeholder="James"></div>
@@ -1082,15 +1100,36 @@ html, body {
       <div class="fg"><label class="fl">Phone (for SMS)</label><input class="fi" id="lphone" type="tel" placeholder="+64 21 000 0000"></div>
       <div class="frow">
         <div class="fg"><label class="fl">Loan amount</label><input class="fi" id="lamount" placeholder="$650,000"></div>
-        <div class="fg"><label class="fl">Property type</label><select class="fsel" id="lptype"><option>Owner-occupier</option><option>Investment</option><option>Refinance</option><option>Construction</option><option>First home</option></select></div>
+        <div class="fg">
+          <label class="fl" style="display:flex;align-items:center;justify-content:space-between;">
+            Lead type
+            <span onclick="openLeadTypeManager()" style="font-size:10px;color:var(--accent);cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;">⚙ Edit types</span>
+          </label>
+          <select class="fsel" id="lptype"></select>
+        </div>
       </div>
-      <div class="fg"><label class="fl">Referrer</label><input class="fi" id="lreferrer" placeholder="e.g. Mike T. (Ray White)"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Referrer name</label><input class="fi" id="lreferrerName" placeholder="e.g. Mike T."></div>
+        <div class="fg">
+          <label class="fl">Referrer type</label>
+          <select class="fsel" id="lreferrerType">
+            <option value="">— select —</option>
+            <option>Client</option>
+            <option>Agent</option>
+            <option>Accountant</option>
+            <option>Google</option>
+            <option>Campaign</option>
+            <option>Social media</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
       <div class="frow">
         <div class="fg"><label class="fl">Status</label><select class="fsel" id="lstatus"></select></div>
         <div class="fg"><label class="fl">Follow-up date</label><input class="fi" id="lreminder" type="date"></div>
       </div>
       <div class="fg"><label class="fl">Notes</label><textarea class="fi" id="lnotes" rows="3" placeholder="First home buyer, looking to settle by August..."></textarea></div>
-      <button class="btn-primary" onclick="saveLead()">Save lead</button>
+      <button class="btn-primary" id="addLeadSaveBtn" onclick="saveLead()">Save lead</button>
     </div>
   </div>
 </div>
@@ -1160,31 +1199,41 @@ html, body {
     <div class="detail-actions">
       <button class="detail-action-btn primary" onclick="openComposeFromDetail('email')">✉ Email</button>
       <button class="detail-action-btn success" onclick="openComposeFromDetail('sms')">💬 SMS</button>
-      <button class="detail-action-btn" onclick="closeModal('detailModal');setTimeout(()=>openModal('addLeadModal'),250)">✎ Edit</button>
-      <button class="detail-action-btn">📅 Remind</button>
+      <button class="detail-action-btn" onclick="openEditLead()">✎ Edit</button>
+      <button class="detail-action-btn" onclick="openReminderModal()">📅 Remind</button>
+    </div>
+    <div style="padding:8px 14px 4px;background:var(--surface);border-bottom:1px solid var(--border);">
+      <button class="detail-action-btn success" style="width:100%;font-size:13px;padding:10px;" onclick="openReferrerSms()">📲 SMS update to referrer</button>
     </div>
     <div class="status-change-row">
       <label>Status</label>
       <select class="fsel" id="dStatus" style="font-size:12px;padding:5px 10px;" onchange="updateDetailStatus()"></select>
     </div>
     <div class="detail-info" id="dInfo"></div>
-    <div class="timeline" id="dTimeline">
-      <div class="tl-hd">Activity</div>
-      <div class="tl-item">
-        <div class="tl-dot-col"><div class="tl-dot email"></div><div class="tl-line"></div></div>
-        <div><div class="tl-title">Document request sent</div><div class="tl-date">via email</div></div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot-col"><div class="tl-dot sms"></div><div class="tl-line"></div></div>
-        <div><div class="tl-title">SMS reminder sent</div><div class="tl-date">via text message</div></div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot-col"><div class="tl-dot neutral"></div></div>
-        <div><div class="tl-title">Lead created</div><div class="tl-date">via referral</div></div>
-      </div>
-    </div>
+    <div class="timeline" id="dTimeline"></div>
     <div style="padding:0 16px 4px;background:var(--surface);">
       <button class="btn-sec" onclick="closeModal('detailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEAD TYPE MANAGER -->
+<div class="modal-bg" id="leadTypeModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">Lead types</span><button class="modal-close" onclick="closeModal('leadTypeModal')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Add, rename, reorder or remove lead types.</p>
+      <label class="fl">Add new type</label>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <input class="new-status-inp" id="newLeadTypeName" placeholder="e.g. Commercial" style="margin:0;flex:1;">
+        <button class="add-status-btn" style="width:auto;padding:10px 16px;margin:0;" onclick="addLeadType()">Add</button>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:14px;">
+        <label class="fl">Current types</label>
+        <div id="leadTypeListEl"></div>
+      </div>
+      <button class="btn-primary" style="margin-top:16px;" onclick="saveLeadTypes()">Save & apply</button>
     </div>
   </div>
 </div>
@@ -1238,6 +1287,73 @@ html, body {
   </div>
 </div>
 
+<!-- REFERRER SMS MODAL -->
+<div class="modal-bg" id="referrerSmsModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">SMS to referrer</span><button class="modal-close" onclick="closeModal('referrerSmsModal')">✕</button></div>
+    <div class="modal-body">
+      <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:16px;border:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Lead</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);" id="refSmsLeadName">—</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;" id="refSmsLeadStatus">—</div>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Referrer name</label>
+        <input class="fi" id="refSmsName" placeholder="e.g. Mike T." oninput="refreshRefSmsTemplate()">
+      </div>
+      <div class="fg">
+        <label class="fl">Referrer phone number</label>
+        <input class="fi" id="refSmsPhone" type="tel" placeholder="+64 21 000 0000">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label class="fl">Select template</label>
+        <div class="etype-scroller" id="refSmsTemplateScroller"></div>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Message <span id="refSmsCounter" style="float:right;font-size:11px;color:var(--text-muted);text-transform:none;font-weight:400;">0/160</span></label>
+        <textarea class="fi" id="refSmsBody" rows="5" oninput="updateRefSmsCount()" placeholder="Type your message to the referrer..."></textarea>
+      </div>
+
+      <div class="sms-bubble-wrap" style="margin-bottom:14px;">
+        <div class="sms-bubble" id="refSmsBubble" style="background:#e0f2fe;color:#075985;">Your message will appear here.</div>
+        <div class="sms-from-lbl" id="refSmsFromLbl">From: —</div>
+      </div>
+
+      <div class="sms-info">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3M8 11h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span id="refSmsInfoText">SMS sent via Twilio. Configure in Settings.</span>
+      </div>
+
+      <button class="btn-primary green" onclick="sendReferrerSms()">Send SMS to referrer ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMINDER MODAL -->
+<div class="modal-bg" id="reminderModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">Set reminder</span><button class="modal-close" onclick="closeModal('reminderModal')">✕</button></div>
+    <div class="modal-body">
+      <div style="font-size:14px;color:var(--text-muted);margin-bottom:16px;" id="reminderLeadName">For: —</div>
+      <div class="fg"><label class="fl">Follow-up date</label><input class="fi" id="reminderDate" type="date"></div>
+      <div class="fg"><label class="fl">Reminder note (optional)</label><input class="fi" id="reminderNote" placeholder="e.g. Call to check on documents"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(1)">Tomorrow</button>
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(3)">In 3 days</button>
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(7)">Next week</button>
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(14)">In 2 weeks</button>
+      </div>
+      <button class="btn-primary" style="margin-top:14px;" onclick="saveReminder()">Set reminder</button>
+      <button class="btn-sec" onclick="clearReminder()">Clear reminder</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1275,6 +1391,18 @@ const DEFAULT_STATUSES = [
   {id:'declined',      label:'Declined',                 color:COLORS[4]},
 ];
 
+const DEFAULT_LEAD_TYPES = [
+  'Owner-occupier',
+  'Investment',
+  'Refinance',
+  'Construction',
+  'First home',
+  'Top-up',
+  'Bridging',
+];
+
+const REFERRER_TYPES = ['Client','Agent','Accountant','Google','Campaign','Social media','Other'];
+
 const EMAIL_TEMPLATES = [
   {icon:'👋', label:'Initial info request',   subject:'Thanks for your enquiry – a few questions to get started', body:'Hi [Name],\n\nThank you for reaching out about your mortgage — I\'d love to help you on this journey.\n\nTo get started and find the best options for you, could you let me know:\n\n1. What is the purchase price or property value?\n2. How much deposit do you have available?\n3. What is your combined annual income (before tax)?\n4. Are you a first home buyer?\n5. What is your ideal settlement timeframe?\n\nFeel free to reply to this email or call me directly — I\'m happy to chat at no obligation.'},
   {icon:'📎', label:'Request documents',      subject:'Documents required – mortgage application', body:'Hi [Name],\n\nTo proceed with your mortgage application we need the following:\n\n• Last 2 payslips\n• 3 months bank statements\n• Photo ID (passport or driver licence)\n• Signed application form\n• Latest rates & insurance notices\n\nPlease reply to this email or upload via our client portal.\n\nWe aim to review within 2 business days of receiving everything.'},
@@ -1298,14 +1426,25 @@ const SMS_TEMPLATES = [
   {icon:'🔔', label:'Quick follow-up',        body:'Hi [Name], [Your name] here — just checking in on your mortgage application. Happy to answer any questions. Reply or call anytime.'},
 ];
 
-// ══ STATE ════════════════════════════════════════════════════════
+const REFERRER_SMS_TEMPLATES = [
+  {icon:'👋', label:'Application received',  body:'Hi [Referrer], it\'s [Your name]. Just letting you know I\'ve received [Lead]\'s enquiry — thanks for the referral! I\'ll be in touch with them shortly.'},
+  {icon:'📋', label:'Docs requested',        body:'Hi [Referrer], quick update on [Lead] — I\'ve requested their documents and things are moving along well. I\'ll keep you posted!'},
+  {icon:'🏦', label:'App submitted',         body:'Hi [Referrer], great news — [Lead]\'s mortgage application has been submitted to the lender. Expect an outcome in the next few days. Thanks again for the referral!'},
+  {icon:'✅', label:'Pre-approval ready',    body:'Hi [Referrer], fantastic update — [Lead] has been pre-approved! 🎉 They\'re now in a great position to find their property. Thanks for sending them my way.'},
+  {icon:'🎉', label:'Approved',              body:'Hi [Referrer], wonderful news — [Lead]\'s mortgage has been formally approved! 🎉 Really appreciate the referral. Please keep me in mind for anyone else you know needing mortgage advice.'},
+  {icon:'📅', label:'Settlement done',       body:'Hi [Referrer], just wanted to let you know [Lead]\'s mortgage has settled successfully! 🏡 Another happy client — thanks so much for the referral.'},
+  {icon:'🔔', label:'General update',        body:'Hi [Referrer], quick update on [Lead] — things are progressing well and I\'m on top of it. Will keep you updated. Thanks for the referral!'},
+  {icon:'⏰', label:'Needs more time',       body:'Hi [Referrer], just a heads up that [Lead]\'s application needs a bit more time — working through a few things with the lender. Nothing to worry about, I\'ll keep you in the loop.'},
+];
 let statuses = [];
+let leadTypes = [];
 let leads = [];
 let profile = {name:'',title:'',business:'',fsp:'',email:'',phone:'',website:'',signature:'',gmailClientId:'',twilioSid:'',twilioToken:'',twilioNumber:''};
 let selectedColorId = COLORS[0].id;
 let currentFilter = 'all';
 let currentView = 'home';
 let currentDetailId = null;
+let editingLeadId = null;
 let attachments = [];
 let currentChannel = 'email';
 
@@ -1314,6 +1453,7 @@ function save() {
   try {
     localStorage.setItem('ml_leads', JSON.stringify(leads));
     localStorage.setItem('ml_statuses', JSON.stringify(statuses));
+    localStorage.setItem('ml_leadtypes', JSON.stringify(leadTypes));
     localStorage.setItem('ml_profile', JSON.stringify(profile));
   } catch(e) {}
 }
@@ -1321,13 +1461,16 @@ function load() {
   try {
     const l = localStorage.getItem('ml_leads');
     const s = localStorage.getItem('ml_statuses');
+    const t = localStorage.getItem('ml_leadtypes');
     const p = localStorage.getItem('ml_profile');
     if (l) leads = JSON.parse(l);
     if (s) statuses = JSON.parse(s); else statuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
+    if (t) leadTypes = JSON.parse(t); else leadTypes = [...DEFAULT_LEAD_TYPES];
     if (p) profile = Object.assign({name:'',title:'',business:'',fsp:'',email:'',phone:'',website:'',signature:'',gmailClientId:'',twilioSid:'',twilioToken:'',twilioNumber:''}, JSON.parse(p));
     else statuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
   } catch(e) {
     statuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
+    leadTypes = [...DEFAULT_LEAD_TYPES];
   }
 }
 
@@ -1574,11 +1717,63 @@ function delSt(i){if(statuses.length<=1){toast('Need at least one status','error
 function addStatus(){const n=document.getElementById('newStatusName').value.trim();if(!n){toast('Enter a status name','error');return;}const c=COLORS.find(x=>x.id===selectedColorId)||COLORS[0];statuses.push({id:'c_'+Date.now(),label:n,color:c});document.getElementById('newStatusName').value='';renderStatusList();}
 function saveStatuses(){save();renderFilterTabs();renderLeads();populateStatusDropdowns();closeModal('statusModal');toast('Statuses saved ✓','success');}
 
-// ══ STATS ════════════════════════════════════════════════════════
+// ══ LEAD TYPES MANAGER ════════════════════════════════════════════
+function populateLeadTypeDropdown() {
+  const el = document.getElementById('lptype');
+  if(!el) return;
+  const current = el.value;
+  el.innerHTML = leadTypes.map(t=>`<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+  if(current) el.value = current;
+}
+
+function renderLeadTypeList() {
+  document.getElementById('leadTypeListEl').innerHTML = leadTypes.map((t,i) =>
+    `<div class="status-item">
+      <input class="status-name-inp" value="${escHtml(t)}" onchange="leadTypes[${i}]=this.value">
+      <div style="display:flex;gap:4px">
+        ${i>0?`<button class="status-act-btn" onclick="mvLt(${i},-1)">↑</button>`:'<div style="width:24px"></div>'}
+        ${i<leadTypes.length-1?`<button class="status-act-btn" onclick="mvLt(${i},1)">↓</button>`:'<div style="width:24px"></div>'}
+        <button class="status-act-btn" onclick="delLt(${i})">✕</button>
+      </div>
+    </div>`
+  ).join('');
+}
+function mvLt(i,d){const j=i+d;if(j<0||j>=leadTypes.length)return;[leadTypes[i],leadTypes[j]]=[leadTypes[j],leadTypes[i]];renderLeadTypeList();}
+function delLt(i){if(leadTypes.length<=1){toast('Need at least one lead type','error');return;}leadTypes.splice(i,1);renderLeadTypeList();}
+function addLeadType(){const n=document.getElementById('newLeadTypeName').value.trim();if(!n){toast('Enter a lead type name','error');return;}leadTypes.push(n);document.getElementById('newLeadTypeName').value='';renderLeadTypeList();}
+function saveLeadTypes(){save();populateLeadTypeDropdown();closeModal('leadTypeModal');toast('Lead types saved ✓','success');}
+
+function openLeadTypeManager() {
+  renderLeadTypeList();
+  openModal('leadTypeModal');
+}
+
 function updateStats() {
+  const now = new Date();
+  now.setHours(23,59,59,999);
+
+  // Parse a stored date string (DD/MM/YYYY or fallback) to a Date object
+  function parseLeadDate(str) {
+    if(!str) return null;
+    // DD/MM/YYYY
+    const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if(m) return new Date(+m[3], +m[2]-1, +m[1]);
+    // Try native parse as fallback
+    const d = new Date(str);
+    return isNaN(d) ? null : d;
+  }
+
+  const cutoff7  = new Date(now); cutoff7.setDate(now.getDate() - 7);  cutoff7.setHours(0,0,0,0);
+  const cutoff14 = new Date(now); cutoff14.setDate(now.getDate() - 14); cutoff14.setHours(0,0,0,0);
+
+  const new7  = leads.filter(l => { const d = parseLeadDate(l.createdAt); return d && d >= cutoff7; }).length;
+  const new14 = leads.filter(l => { const d = parseLeadDate(l.createdAt); return d && d >= cutoff14; }).length;
+
   document.getElementById('statTotal').textContent = leads.length;
   document.getElementById('statActive').textContent = leads.filter(l=>!['settled','declined'].includes(l.statusId)).length;
   document.getElementById('statStarred').textContent = leads.filter(l=>l.starred).length;
+  document.getElementById('stat7d').textContent = new7;
+  document.getElementById('stat14d').textContent = new14;
   const p = leads.reduce((s,l)=>s+(l.amountVal||0),0);
   document.getElementById('statPipeline').textContent = p>=1000?'$'+(p/1000).toFixed(1)+'M':p?'$'+p+'k':'$0';
 }
@@ -1610,13 +1805,13 @@ function renderLeads() {
 function rowHTML(l) {
   const s = getStatus(l.statusId);
   const badge = l.reminder
-    ? `<span class="reminder-pill"><span class="rdot"></span>${l.reminder}</span>`
+    ? `<span class="reminder-pill"><span class="rdot"></span>${formatDate(l.reminder)}</span>`
     : `<span class="status-pill" style="background:${s.color.bg};color:${s.color.text}">${s.label}</span>`;
   return `<div class="${l.starred?'lead-row starred':'lead-row'}" onclick="openDetail(${l.id})">
     <button class="star-btn ${l.starred?'on':''}" onclick="event.stopPropagation();toggleStar(${l.id})">★</button>
     <div class="lead-info">
       <div class="lead-name">${escHtml(l.name)}</div>
-      <div class="lead-meta">${escHtml(l.amount||'')}${l.type?' · '+escHtml(l.type):''}${l.referrer?' · via '+escHtml(l.referrer):''}</div>
+      <div class="lead-meta">${escHtml(l.amount||'')}${l.type?' · '+escHtml(l.type):''}${(l.referrerName||l.referrer)?' · via '+escHtml(l.referrerName||l.referrer)+(l.referrerType?' ('+escHtml(l.referrerType)+')':''):''}</div>
     </div>
     ${badge}
     <div class="row-btns">
@@ -1637,7 +1832,50 @@ function toggleStar(id) {
   if(l) { l.starred=!l.starred; save(); renderLeads(); }
 }
 
-// ══ ADD / SAVE LEAD ═══════════════════════════════════════════════
+// ══ ADD / EDIT LEAD ══════════════════════════════════════════════
+function openAddLead() {
+  editingLeadId = null;
+  document.getElementById('addLeadModalTitle').textContent = 'New lead';
+  document.getElementById('addLeadSaveBtn').textContent = 'Save lead';
+  ['fn','ln','lemail','lphone','lamount','lreferrerName','lreminder','lnotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  populateLeadTypeDropdown();
+  document.getElementById('lptype').selectedIndex = 0;
+  document.getElementById('lstatus').selectedIndex = 0;
+  document.getElementById('lreferrerType').selectedIndex = 0;
+  openModal('addLeadModal');
+}
+
+function openEditLead() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  editingLeadId = l.id;
+  closeModal('detailModal');
+  setTimeout(() => {
+    document.getElementById('addLeadModalTitle').textContent = 'Edit lead';
+    document.getElementById('addLeadSaveBtn').textContent = 'Save changes';
+    const nameParts = l.name.split(' ');
+    document.getElementById('fn').value = nameParts[0] || '';
+    document.getElementById('ln').value = nameParts.slice(1).join(' ') || '';
+    document.getElementById('lemail').value = l.email || '';
+    document.getElementById('lphone').value = l.phone || '';
+    document.getElementById('lamount').value = l.amount || '';
+    document.getElementById('lreferrerName').value = l.referrerName || l.referrer || '';
+    document.getElementById('lnotes').value = l.notes || '';
+    document.getElementById('lreminder').value = toInputDate(l.reminder || '');
+    // Lead type
+    populateLeadTypeDropdown();
+    const ptEl = document.getElementById('lptype');
+    for(let i=0;i<ptEl.options.length;i++){if(ptEl.options[i].value===l.type||ptEl.options[i].text===l.type){ptEl.selectedIndex=i;break;}}
+    // Referrer type
+    const rtEl = document.getElementById('lreferrerType');
+    for(let i=0;i<rtEl.options.length;i++){if(rtEl.options[i].value===(l.referrerType||'')){rtEl.selectedIndex=i;break;}}
+    // Status
+    const stEl = document.getElementById('lstatus');
+    for(let i=0;i<stEl.options.length;i++){if(stEl.options[i].value===l.statusId){stEl.selectedIndex=i;break;}}
+    openModal('addLeadModal');
+  }, 250);
+}
+
 function saveLead() {
   const first = document.getElementById('fn').value.trim();
   const last  = document.getElementById('ln').value.trim();
@@ -1646,26 +1884,50 @@ function saveLead() {
   const amt  = document.getElementById('lamount').value.trim();
   const val  = parseFloat(amt.replace(/[$,k]/gi,'')) || 0;
   const normVal = amt.toLowerCase().includes('k') ? val : val >= 1000 ? val/1000 : val;
-  leads.unshift({
-    id:Date.now(), name,
-    amount: amt || '',
-    amountVal: normVal,
-    type: document.getElementById('lptype').value,
-    statusId: document.getElementById('lstatus').value,
-    email: document.getElementById('lemail').value.trim(),
-    phone: document.getElementById('lphone').value.trim(),
-    referrer: document.getElementById('lreferrer').value.trim(),
-    reminder: document.getElementById('lreminder').value || null,
-    starred: false,
-    notes: document.getElementById('lnotes').value.trim(),
-    createdAt: new Date().toLocaleDateString('en-NZ'),
-    activity: [{type:'neutral',title:'Lead created',date: new Date().toLocaleDateString('en-NZ')}]
-  });
-  save();
-  closeModal('addLeadModal');
-  renderLeads();
-  toast(name + ' added ✓', 'success');
-  ['fn','ln','lemail','lphone','lamount','lreferrer','lreminder','lnotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const statusId = document.getElementById('lstatus').value;
+  const rawDate = document.getElementById('lreminder').value;
+  const reminder = rawDate ? formatDate(rawDate) : null;
+
+  if(editingLeadId) {
+    const l = leads.find(x=>x.id===editingLeadId);
+    if(l) {
+      l.name = name;
+      l.amount = amt;
+      l.amountVal = normVal;
+      l.type = document.getElementById('lptype').value;
+      l.statusId = statusId;
+      l.email = document.getElementById('lemail').value.trim();
+      l.phone = document.getElementById('lphone').value.trim();
+      l.referrerName = document.getElementById('lreferrerName').value.trim();
+      l.referrerType = document.getElementById('lreferrerType').value;
+      l.referrer = l.referrerName; // keep legacy field in sync for display
+      l.reminder = reminder;
+      l.notes = document.getElementById('lnotes').value.trim();
+      if(!l.activity) l.activity=[];
+      l.activity.unshift({type:'neutral',title:'Lead updated',date:new Date().toLocaleDateString('en-NZ')});
+    }
+    save(); closeModal('addLeadModal'); renderLeads(); toast(name+' updated ✓','success');
+  } else {
+    const referrerName = document.getElementById('lreferrerName').value.trim();
+    const referrerType = document.getElementById('lreferrerType').value;
+    leads.unshift({
+      id:Date.now(), name, amount:amt, amountVal:normVal,
+      type: document.getElementById('lptype').value,
+      statusId,
+      email: document.getElementById('lemail').value.trim(),
+      phone: document.getElementById('lphone').value.trim(),
+      referrerName,
+      referrerType,
+      referrer: referrerName, // legacy display field
+      reminder,
+      starred: false,
+      notes: document.getElementById('lnotes').value.trim(),
+      createdAt: new Date().toLocaleDateString('en-NZ'),
+      activity: [{type:'neutral',title:'Lead created',date:new Date().toLocaleDateString('en-NZ')}]
+    });
+    save(); closeModal('addLeadModal'); renderLeads(); toast(name+' added ✓','success');
+  }
+  editingLeadId = null;
 }
 
 // ══ DETAIL ═══════════════════════════════════════════════════════
@@ -1680,10 +1942,31 @@ function openDetail(id) {
   document.getElementById('dInfo').innerHTML = `
     <div class="detail-info-item"><label>Email</label><span>${escHtml(l.email||'—')}</span></div>
     <div class="detail-info-item"><label>Phone</label><span>${escHtml(l.phone||'—')}</span></div>
-    <div class="detail-info-item"><label>Referrer</label><span>${escHtml(l.referrer||'—')}</span></div>
-    <div class="detail-info-item"><label>Follow-up</label><span>${escHtml(l.reminder||'None set')}</span></div>
+    <div class="detail-info-item"><label>Referrer</label><span>${escHtml(l.referrerName||l.referrer||'—')}</span></div>
+    <div class="detail-info-item"><label>Referrer type</label><span>${escHtml(l.referrerType||'—')}</span></div>
+    <div class="detail-info-item"><label>Follow-up</label><span>${l.reminder ? formatDate(l.reminder) : 'None set'}</span></div>
+    <div class="detail-info-item"><label>Created</label><span>${escHtml(l.createdAt||'—')}</span></div>
     ${l.notes?`<div class="detail-info-item" style="grid-column:1/-1"><label>Notes</label><span>${escHtml(l.notes)}</span></div>`:''}
   `;
+  // Render real activity timeline
+  const activity = l.activity || [];
+  if(activity.length === 0) {
+    document.getElementById('dTimeline').innerHTML = `
+      <div class="tl-hd">Activity</div>
+      <div style="font-size:13px;color:var(--text-muted);padding:8px 0 12px;font-style:italic;">No activity recorded yet.</div>`;
+  } else {
+    const items = activity.map((a, i) => {
+      const isLast = i === activity.length - 1;
+      return `<div class="tl-item">
+        <div class="tl-dot-col">
+          <div class="tl-dot ${a.type||'neutral'}"></div>
+          ${!isLast ? '<div class="tl-line"></div>' : ''}
+        </div>
+        <div><div class="tl-title">${escHtml(a.title)}</div><div class="tl-date">${escHtml(a.date||'')}</div></div>
+      </div>`;
+    }).join('');
+    document.getElementById('dTimeline').innerHTML = `<div class="tl-hd">Activity</div>${items}`;
+  }
   openModal('detailModal');
 }
 
@@ -1698,9 +1981,16 @@ function toggleDetailStar() {
 function updateDetailStatus() {
   const l = leads.find(x=>x.id===currentDetailId);
   if(!l) return;
-  l.statusId = document.getElementById('dStatus').value;
+  const newStatus = document.getElementById('dStatus').value;
+  const oldLabel = getStatus(l.statusId).label;
+  const newLabel = getStatus(newStatus).label;
+  l.statusId = newStatus;
+  if(!l.activity) l.activity = [];
+  l.activity.unshift({type:'neutral', title:'Status changed to ' + newLabel, date: new Date().toLocaleString('en-NZ',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})});
   save(); renderLeads();
-  toast('Status updated ✓');
+  // Re-render timeline in place
+  openDetail(currentDetailId);
+  toast('Status updated to ' + newLabel);
 }
 
 function openComposeFromDetail(ch) {
@@ -1891,6 +2181,161 @@ async function sendViaTwilio(to, body, lead) {
   }
 }
 
+// ══ REFERRER SMS ══════════════════════════════════════════════════
+function openReferrerSms() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  const s = getStatus(l.statusId);
+  document.getElementById('refSmsLeadName').textContent = l.name;
+  document.getElementById('refSmsLeadStatus').textContent = s.label + (l.amount ? ' · ' + l.amount : '');
+  document.getElementById('refSmsName').value = l.referrer || '';
+  document.getElementById('refSmsPhone').value = '';
+  document.getElementById('refSmsFromLbl').textContent = 'From: ' + (profile.twilioNumber || 'Configure Twilio in Settings');
+  document.getElementById('refSmsInfoText').textContent = profile.twilioSid
+    ? 'SMS will be sent via Twilio from ' + (profile.twilioNumber || 'your number') + '.'
+    : 'SMS requires Twilio — configure in Settings. Will open SMS app instead.';
+  renderRefSmsTemplates();
+  selectRefSmsTemplate(0);
+  closeModal('detailModal');
+  setTimeout(() => openModal('referrerSmsModal'), 250);
+}
+
+function renderRefSmsTemplates() {
+  document.getElementById('refSmsTemplateScroller').innerHTML = REFERRER_SMS_TEMPLATES.map((t,i) =>
+    `<div class="etype-card${i===0?' active':''}" onclick="selectRefSmsTemplate(${i})">
+      <div class="etype-icon">${t.icon}</div>
+      <div class="etype-lbl">${t.label}</div>
+    </div>`
+  ).join('');
+}
+
+function selectRefSmsTemplate(idx) {
+  document.querySelectorAll('#refSmsTemplateScroller .etype-card').forEach((c,i) => c.classList.toggle('active', i===idx));
+  const l = leads.find(x=>x.id===currentDetailId);
+  const leadName = l ? l.name.split(' ')[0] : '[Lead]';
+  const refName = document.getElementById('refSmsName').value.trim() || '[Referrer]';
+  let body = REFERRER_SMS_TEMPLATES[idx].body
+    .replace(/\[Lead\]/g, leadName)
+    .replace(/\[Referrer\]/g, refName)
+    .replace(/\[Your name\]/g, profile.name || '[Your name]');
+  document.getElementById('refSmsBody').value = body;
+  updateRefSmsCount();
+}
+
+function refreshRefSmsTemplate() {
+  const active = document.querySelector('#refSmsTemplateScroller .etype-card.active');
+  if(!active) return;
+  const idx = Array.from(document.querySelectorAll('#refSmsTemplateScroller .etype-card')).indexOf(active);
+  if(idx >= 0) selectRefSmsTemplate(idx);
+}
+
+function updateRefSmsCount() {
+  const len = document.getElementById('refSmsBody').value.length;
+  const msgs = Math.ceil(len/160) || 1;
+  document.getElementById('refSmsCounter').textContent = len + '/' + (msgs*160) + (msgs>1?' ('+msgs+' SMS)':'');
+  document.getElementById('refSmsBubble').innerHTML = (document.getElementById('refSmsBody').value || 'Your message will appear here.').replace(/\n/g,'<br>');
+}
+
+async function sendReferrerSms() {
+  const phone = document.getElementById('refSmsPhone').value.trim();
+  const body  = document.getElementById('refSmsBody').value.trim();
+  const refName = document.getElementById('refSmsName').value.trim() || 'Referrer';
+  if(!phone) { toast('Enter the referrer\'s phone number','error'); return; }
+  if(!body)  { toast('Message is empty','error'); return; }
+
+  const l = leads.find(x=>x.id===currentDetailId);
+
+  if(profile.twilioSid && profile.twilioToken && profile.twilioNumber) {
+    const btn = document.querySelector('#referrerSmsModal .btn-primary');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Sending…';
+    try {
+      const auth = btoa(profile.twilioSid+':'+profile.twilioToken);
+      const resp = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${profile.twilioSid}/Messages.json`, {
+        method:'POST',
+        headers:{'Authorization':'Basic '+auth,'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({To:phone, From:profile.twilioNumber, Body:body})
+      });
+      if(resp.ok) {
+        if(l) logActivity(l.id, 'sms', 'SMS sent to referrer ' + refName);
+        toast('SMS sent to referrer ✓','success');
+        closeModal('referrerSmsModal');
+      } else {
+        const err = await resp.json();
+        toast('Twilio error: '+(err.message||resp.status),'error');
+      }
+    } catch(e) {
+      toast('SMS error — check Twilio credentials','error');
+    } finally {
+      const btn2 = document.querySelector('#referrerSmsModal .btn-primary');
+      if(btn2) { btn2.disabled=false; btn2.textContent='Send SMS to referrer ↗'; }
+    }
+  } else {
+    // Fallback to SMS app
+    window.open(`sms:${phone}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(body)}`, '_blank');
+    if(l) logActivity(l.id, 'sms', 'SMS drafted for referrer ' + refName);
+    toast('Opening SMS app…');
+    closeModal('referrerSmsModal');
+  }
+}
+
+// ══ DATE HELPERS ══════════════════════════════════════════════════
+// Converts YYYY-MM-DD (HTML date input value) to DD/MM/YYYY for display
+function formatDate(val) {
+  if(!val) return '';
+  // Already in DD/MM/YYYY
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(val)) return val;
+  // YYYY-MM-DD from input
+  const m = val.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return m[3]+'/'+m[2]+'/'+m[1];
+  return val;
+}
+// Converts DD/MM/YYYY back to YYYY-MM-DD for setting input value
+function toInputDate(val) {
+  if(!val) return '';
+  if(/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  const m = val.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(m) return m[3]+'-'+m[2]+'-'+m[1];
+  return val;
+}
+// Returns today + N days as YYYY-MM-DD
+function daysFromNow(n) {
+  const d = new Date(); d.setDate(d.getDate()+n);
+  return d.toISOString().split('T')[0];
+}
+
+// ══ REMINDER ══════════════════════════════════════════════════════
+function openReminderModal() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  document.getElementById('reminderLeadName').textContent = 'For: '+l.name;
+  document.getElementById('reminderDate').value = toInputDate(l.reminder||'');
+  document.getElementById('reminderNote').value = l.reminderNote || '';
+  openModal('reminderModal');
+}
+function quickRemind(days) {
+  document.getElementById('reminderDate').value = daysFromNow(days);
+}
+function saveReminder() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  const raw = document.getElementById('reminderDate').value;
+  if(!raw) { toast('Please pick a date','error'); return; }
+  l.reminder = formatDate(raw);
+  l.reminderNote = document.getElementById('reminderNote').value.trim();
+  if(!l.activity) l.activity=[];
+  l.activity.unshift({type:'neutral',title:'Reminder set for '+l.reminder,date:new Date().toLocaleDateString('en-NZ')});
+  save(); renderLeads(); closeModal('reminderModal'); closeModal('detailModal');
+  toast('Reminder set for '+l.reminder+' ✓','success');
+}
+function clearReminder() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  l.reminder = null; l.reminderNote = '';
+  save(); renderLeads(); closeModal('reminderModal');
+  toast('Reminder cleared');
+}
+
 function logActivity(leadId, type, title) {
   const l = leads.find(x=>x.id===leadId);
   if(!l) return;
@@ -1904,11 +2349,12 @@ function doExport(type) {
   let rows = leads;
   if(type==='starred')   rows = leads.filter(l=>l.starred);
   if(type==='reminders') rows = leads.filter(l=>l.reminder);
-  const hdr = ['Name','Email','Phone','Amount','Type','Status','Referrer','Reminder','Starred','Notes','Created'];
+  const hdr = ['Name','Email','Phone','Amount','Lead Type','Status','Referrer Name','Referrer Type','Follow-up Date','Starred','Notes','Created Date'];
   const csv = [hdr.join(','), ...rows.map(l=>[
     l.name, l.email||'', l.phone||'', l.amount||'',
     l.type||'', getStatus(l.statusId).label,
-    l.referrer||'', l.reminder||'',
+    l.referrerName||l.referrer||'', l.referrerType||'',
+    l.reminder ? formatDate(l.reminder) : '',
     l.starred?'Yes':'No', l.notes||'', l.createdAt||''
   ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\n');
   const a = document.createElement('a');
@@ -1944,7 +2390,11 @@ Object.assign(window, {
   completeSetup, skipSetup, switchView, saveSettings, liveUpdateProfile, liveUpdateSig,
   configureGmail, clearAllData, setFilter, renderColorSwatches, selectColor,
   renderStatusList, mvSt, delSt, addStatus, saveStatuses,
-  saveLead, openDetail, toggleDetailStar, updateDetailStatus, openComposeFromDetail,
+  openLeadTypeManager, renderLeadTypeList, mvLt, delLt, addLeadType, saveLeadTypes,
+  openAddLead, openEditLead, saveLead,
+  openDetail, toggleDetailStar, updateDetailStatus, openComposeFromDetail,
+  openReminderModal, quickRemind, saveReminder, clearReminder,
+  openReferrerSms, selectRefSmsTemplate, refreshRefSmsTemplate, updateRefSmsCount, sendReferrerSms,
   openCompose, switchChannel, selectEtype, selectStype, updateCharCount,
   handleFiles, removeAttach, sendEmail, sendSms, doExport, toggleStar, openModal, closeModal
 });
@@ -1963,6 +2413,7 @@ renderColorSwatches();
 renderStatusList();
 renderFilterTabs();
 populateStatusDropdowns();
+populateLeadTypeDropdown();
 renderTemplatesModal();
 renderLeads();
 applyProfile();
