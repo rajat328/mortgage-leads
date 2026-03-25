@@ -1,0 +1,2423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f2744">
+<title>MortgageLeads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & ROOT ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0f2744;
+  --navy-mid: #1a3a5c;
+  --navy-light: #243f63;
+  --accent: #2563eb;
+  --accent-light: #eff6ff;
+  --accent-hover: #1d4ed8;
+  --green: #16a34a;
+  --green-light: #f0fdf4;
+  --surface: #ffffff;
+  --surface2: #f8f9fa;
+  --surface3: #f1f3f5;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --max-w: 430px;
+  --nav-h: 72px;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: #e8edf2;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+}
+
+/* ── SETUP SCREEN ──────────────────────────────────────────────── */
+#setupScreen {
+  position: fixed;
+  inset: 0;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+}
+#setupScreen.hidden { display: none; }
+.setup-card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  width: 100%;
+  max-width: var(--max-w);
+  box-shadow: var(--shadow-lg);
+}
+.setup-logo { font-size: 22px; font-weight: 600; color: var(--navy); margin-bottom: 6px; letter-spacing: -0.5px; }
+.setup-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.5; }
+.setup-step { margin-bottom: 20px; }
+.setup-step-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.setup-step-num { width: 20px; height: 20px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.setup-input { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border2); border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font); color: var(--text); background: var(--surface2); margin-bottom: 8px; transition: border-color 0.15s; }
+.setup-input:focus { outline: none; border-color: var(--accent); background: #fff; }
+.setup-input.mono { font-family: var(--font-mono); font-size: 13px; }
+.setup-note { font-size: 11px; color: var(--text-muted); line-height: 1.5; background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 8px; }
+.setup-note a { color: var(--accent); text-decoration: none; }
+.setup-btn { width: 100%; padding: 13px; background: var(--navy); color: #fff; border: none; border-radius: var(--radius-md); font-size: 15px; font-weight: 500; cursor: pointer; font-family: var(--font); margin-top: 8px; transition: background 0.15s; }
+.setup-btn:hover { background: var(--navy-mid); }
+.setup-skip { width: 100%; padding: 10px; background: transparent; color: var(--text-muted); border: 1.5px solid var(--border2); border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--font); margin-top: 8px; }
+.setup-skip:hover { background: var(--surface2); }
+
+/* ── APP SHELL ─────────────────────────────────────────────────── */
+#app {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--surface);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── TOPBAR ────────────────────────────────────────────────────── */
+.topbar {
+  background: var(--navy);
+  padding: 16px 18px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-row1 { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.topbar-brand { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.4px; }
+.topbar-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; font-weight: 400; }
+.topbar-actions { display: flex; gap: 8px; }
+.tbar-btn { width: 32px; height: 32px; border-radius: 9px; background: rgba(255,255,255,0.12); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9); transition: background 0.15s; flex-shrink: 0; }
+.tbar-btn:hover { background: rgba(255,255,255,0.2); }
+.tbar-btn svg { width: 16px; height: 16px; }
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.stat-cell { background: var(--navy-mid); padding: 10px 6px; text-align: center; }
+.stat-cell.accent { background: rgba(255,255,255,0.07); }
+.stat-n { font-size: 19px; font-weight: 600; color: #fff; letter-spacing: -0.5px; }
+.stat-n.highlight { color: #7dd3fc; }
+.stat-l { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 500; }
+
+/* ── FILTER TABS ───────────────────────────────────────────────── */
+.tabs-wrap { padding: 10px 16px 0; background: var(--surface); border-bottom: 1px solid var(--border); }
+.tabs { display: flex; gap: 5px; overflow-x: auto; scrollbar-width: none; padding-bottom: 10px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border2);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.tab.active { color: #fff; border-color: transparent; }
+.tab:hover:not(.active) { background: var(--surface2); }
+
+/* ── SEARCH ────────────────────────────────────────────────────── */
+.search-wrap { padding: 10px 16px 6px; background: var(--surface); }
+.search-inner { position: relative; }
+.search-inner input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  font-size: 13px;
+  font-family: var(--font);
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+.search-inner input:focus { outline: none; border-color: var(--accent); background: #fff; }
+.search-inner input::placeholder { color: var(--text-light); }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-light); pointer-events: none; }
+
+/* ── LEADS LIST ────────────────────────────────────────────────── */
+.leads-list { flex: 1; padding: 6px 14px calc(var(--nav-h) + 30px); overflow-y: auto; background: var(--surface2); }
+.section-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 12px 2px 6px;
+}
+
+/* Lead row */
+.lead-row {
+  display: flex;
+  align-items: center;
+  padding: 9px 11px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 6px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.lead-row:hover { border-color: var(--border2); box-shadow: var(--shadow-sm); }
+.lead-row.starred { border-color: #fbbf24; background: #fffbeb; }
+.lead-row.starred:hover { border-color: #f59e0b; }
+
+.star-btn {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 15px;
+  color: #d1d5db;
+  transition: color 0.15s, transform 0.1s;
+  padding: 0;
+}
+.star-btn:hover { transform: scale(1.2); }
+.star-btn.on { color: #f59e0b; }
+
+.lead-info { flex: 1; min-width: 0; padding: 0 8px; }
+.lead-name { font-size: 15px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lead-meta { font-size: 13px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.status-pill { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.1px; }
+.reminder-pill { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #b45309; background: #fef3c7; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.rdot { width: 5px; height: 5px; border-radius: 50%; background: #f97316; flex-shrink: 0; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+.row-btns { display: flex; gap: 5px; margin-left: 7px; flex-shrink: 0; }
+.row-icon-btn {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.row-icon-btn svg { width: 13px; height: 13px; }
+.row-icon-btn.email { border-color: #bfdbfe; color: var(--accent); }
+.row-icon-btn.email:hover { background: var(--accent-light); }
+.row-icon-btn.sms { border-color: #bbf7d0; color: var(--green); }
+.row-icon-btn.sms:hover { background: var(--green-light); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px 20px; }
+.empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+.empty-title { font-size: 15px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+.empty-sub { font-size: 13px; color: var(--text-light); }
+
+/* ── BOTTOM NAV ────────────────────────────────────────────────── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--max-w);
+  max-width: 100%;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 10px 0 0;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 50;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+}
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: var(--font); }
+.nav-btn svg { width: 22px; height: 22px; }
+.nav-btn span { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+.nav-btn.active span { color: var(--accent); }
+
+/* FAB */
+.fab {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 14px);
+  right: max(16px, calc(50vw - var(--max-w)/2 + 16px));
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(15,39,68,0.35);
+  z-index: 49;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.fab:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(15,39,68,0.4); }
+.fab svg { width: 20px; height: 20px; }
+
+/* ── VIEWS ─────────────────────────────────────────────────────── */
+#settingsView { display: none; flex: 1; overflow-y: auto; padding-bottom: var(--nav-h); background: var(--surface2); }
+#settingsView.active { display: block; }
+#homeViewWrap { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+#homeViewWrap.hidden { display: none; }
+
+/* Settings */
+.set-section { margin-bottom: 0; }
+.set-section-hd { padding: 12px 18px 8px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+.set-section-title { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+.set-rows { background: var(--surface); border-bottom: 1px solid var(--border); }
+.set-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; border-bottom: 1px solid var(--border); gap: 12px; }
+.set-row:last-child { border-bottom: none; }
+.set-row-left { flex: 1; min-width: 0; }
+.set-row-label { font-size: 15px; font-weight: 500; color: var(--text); }
+.set-row-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.set-input {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: var(--text);
+  text-align: right;
+  font-family: var(--font);
+  padding: 0;
+  max-width: 55%;
+  min-width: 0;
+}
+.set-input:focus { outline: none; color: var(--accent); }
+.set-input::placeholder { color: var(--text-light); }
+.set-input.mono { font-family: var(--font-mono); font-size: 12px; }
+.set-select { border: none; background: transparent; font-size: 13px; color: var(--text); font-family: var(--font); cursor: pointer; }
+.set-select:focus { outline: none; }
+
+/* Toggle */
+.toggle-wrap { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+.toggle-wrap input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-sl { position: absolute; inset: 0; background: var(--border2); border-radius: 22px; cursor: pointer; transition: background 0.2s; }
+.toggle-sl::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.toggle-wrap input:checked + .toggle-sl { background: var(--accent); }
+.toggle-wrap input:checked + .toggle-sl::before { transform: translateX(18px); }
+
+/* Connection pills */
+.conn-pill { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; }
+.conn-pill.on { background: #dcfce7; color: #166534; }
+.conn-pill.off { background: #fee2e2; color: #991b1b; cursor: pointer; }
+.conn-pill .cdot { width: 6px; height: 6px; border-radius: 50%; }
+.conn-pill.on .cdot { background: #16a34a; }
+.conn-pill.off .cdot { background: #ef4444; }
+
+/* Profile header in settings */
+.profile-hd {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 18px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.profile-av {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: -0.5px;
+}
+.profile-name { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+.profile-email { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+/* Sig preview */
+.sig-preview {
+  margin: 0 18px 16px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.sig-preview-lbl { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+
+/* Danger */
+.danger-wrap { padding: 16px 18px; }
+.danger-btn {
+  width: 100%;
+  padding: 11px;
+  border: 1.5px solid #fca5a5;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: #dc2626;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.15s;
+}
+.danger-btn:hover { background: #fee2e2; }
+
+/* Save bar */
+.save-bar { padding: 12px 18px; background: var(--surface); border-top: 1px solid var(--border); position: sticky; bottom: var(--nav-h); }
+.save-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.15s;
+}
+.save-btn:hover { background: var(--navy-mid); }
+
+/* ── MODALS ────────────────────────────────────────────────────── */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s;
+  backdrop-filter: blur(2px);
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  width: 100%;
+  max-width: var(--max-w);
+  transform: translateY(40px);
+  transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+  max-height: 92vh;
+  overflow-y: auto;
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+}
+.modal-bg.open .modal { transform: translateY(0); }
+.modal-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 10px auto 0; }
+.modal-head {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 1;
+}
+.modal-title { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+.modal-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  transition: background 0.15s;
+}
+.modal-close:hover { background: var(--surface3); }
+.modal-body { padding: 16px 18px; }
+
+/* Form elements */
+.fg { margin-bottom: 14px; }
+.fl { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+.fi {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface2);
+  transition: border-color 0.15s, background 0.15s;
+}
+.fi:focus { outline: none; border-color: var(--accent); background: #fff; }
+.fi::placeholder { color: var(--text-light); }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fsel {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface2);
+  cursor: pointer;
+}
+.fsel:focus { outline: none; border-color: var(--accent); }
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.15s;
+  margin-top: 4px;
+  letter-spacing: -0.2px;
+}
+.btn-primary:hover { background: var(--navy-mid); }
+.btn-primary.green { background: var(--green); }
+.btn-primary.green:hover { background: #15803d; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-sec {
+  width: 100%;
+  padding: 11px;
+  background: var(--surface2);
+  color: var(--text);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.15s;
+  margin-top: 8px;
+}
+.btn-sec:hover { background: var(--surface3); }
+
+/* ── COMPOSE MODAL ─────────────────────────────────────────────── */
+.channel-toggle {
+  display: flex;
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 14px;
+  border: 1.5px solid var(--border);
+}
+.ch-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.ch-btn.active-email { background: var(--accent); color: #fff; }
+.ch-btn.active-sms { background: var(--green); color: #fff; }
+.ch-btn svg { width: 14px; height: 14px; }
+
+/* Email type scroller */
+.etype-scroller { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; margin-bottom: 14px; padding-bottom: 2px; }
+.etype-scroller::-webkit-scrollbar { display: none; }
+.etype-card {
+  flex-shrink: 0;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 9px 13px;
+  cursor: pointer;
+  min-width: 110px;
+  transition: all 0.15s;
+  background: var(--surface);
+}
+.etype-card:hover { border-color: var(--accent); background: var(--accent-light); }
+.etype-card.active { border-color: var(--accent); background: var(--accent-light); }
+.etype-icon { font-size: 16px; margin-bottom: 4px; }
+.etype-lbl { font-size: 11px; font-weight: 500; color: var(--text-muted); line-height: 1.3; }
+.etype-card.active .etype-lbl { color: var(--accent); }
+
+.stype-card {
+  flex-shrink: 0;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 9px 13px;
+  cursor: pointer;
+  min-width: 110px;
+  transition: all 0.15s;
+  background: var(--surface);
+}
+.stype-card:hover { border-color: var(--green); background: var(--green-light); }
+.stype-card.active { border-color: var(--green); background: var(--green-light); }
+.stype-icon { font-size: 16px; margin-bottom: 4px; }
+.stype-lbl { font-size: 11px; font-weight: 500; color: var(--text-muted); line-height: 1.3; }
+.stype-card.active .stype-lbl { color: var(--green); }
+
+.sig-block {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  border: 1px solid var(--border);
+}
+
+/* Attachments */
+.attach-zone {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1.5px dashed var(--border2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: all 0.15s;
+  background: var(--surface2);
+}
+.attach-zone:hover { border-color: var(--accent); background: var(--accent-light); }
+.attach-zone svg { width: 15px; height: 15px; color: var(--accent); flex-shrink: 0; }
+.attach-zone-lbl { font-size: 12px; color: var(--text-muted); }
+.attach-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.attach-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 3px 10px 3px 8px;
+  font-size: 11px;
+  color: var(--text);
+}
+.attach-rm { cursor: pointer; color: var(--text-muted); font-size: 13px; line-height: 1; margin-left: 2px; }
+.attach-rm:hover { color: #dc2626; }
+
+/* SMS */
+.sms-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fefce8;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 13px;
+  font-size: 11px;
+  color: #92400e;
+  line-height: 1.5;
+}
+.sms-info svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+.sms-bubble-wrap {
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin: 10px 0;
+  border: 1px solid var(--border);
+}
+.sms-bubble {
+  background: #dcfce7;
+  border-radius: 14px 14px 4px 14px;
+  padding: 10px 13px;
+  font-size: 13px;
+  color: #14532d;
+  line-height: 1.55;
+  display: inline-block;
+  max-width: 90%;
+  word-break: break-word;
+}
+.sms-from-lbl { font-size: 10px; color: var(--text-muted); margin-top: 7px; font-family: var(--font-mono); }
+.char-counter { font-size: 11px; color: var(--text-muted); text-align: right; margin-top: 4px; }
+.char-counter.warn { color: #d97706; }
+.char-counter.over { color: #dc2626; font-weight: 600; }
+
+/* ── DETAIL MODAL ──────────────────────────────────────────────── */
+.detail-hero { background: var(--navy); padding: 18px 18px 16px; }
+.detail-name { font-size: 17px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
+.detail-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+.detail-actions {
+  display: flex;
+  gap: 6px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.detail-action-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  text-align: center;
+  transition: all 0.15s;
+}
+.detail-action-btn:hover { background: var(--surface2); }
+.detail-action-btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+.detail-action-btn.primary:hover { background: var(--navy-mid); }
+.detail-action-btn.success { background: var(--green); color: #fff; border-color: var(--green); }
+.detail-action-btn.success:hover { background: #15803d; }
+
+.detail-info { padding: 10px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.detail-info-item label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+.detail-info-item span { font-size: 15px; color: var(--text); word-break: break-all; }
+
+.status-change-row {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+}
+.status-change-row label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+
+/* Timeline */
+.timeline { padding: 12px 16px; background: var(--surface); }
+.tl-hd { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 12px; }
+.tl-item { display: flex; gap: 11px; margin-bottom: 14px; }
+.tl-dot-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.tl-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
+.tl-dot.email { background: var(--accent); }
+.tl-dot.sms { background: var(--green); }
+.tl-dot.neutral { background: var(--border2); }
+.tl-line { width: 1px; flex: 1; background: var(--border); margin-top: 4px; min-height: 16px; }
+.tl-title { font-size: 12px; font-weight: 500; color: var(--text); }
+.tl-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── STATUS MANAGER ────────────────────────────────────────────── */
+.status-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.status-item:last-child { border-bottom: none; }
+.status-color-dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
+.status-name-inp { flex: 1; border: none; background: transparent; font-size: 13px; font-family: var(--font); color: var(--text); padding: 0; }
+.status-name-inp:focus { outline: none; }
+.status-act-btn {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+.status-act-btn:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+.color-swatches { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 14px; }
+.color-sw { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2.5px solid transparent; transition: transform 0.1s; }
+.color-sw:hover { transform: scale(1.15); }
+.color-sw.active { border-color: var(--navy); }
+.new-status-inp { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border2); border-radius: var(--radius-sm); font-size: 13px; font-family: var(--font); color: var(--text); background: var(--surface2); margin-bottom: 8px; }
+.new-status-inp:focus { outline: none; border-color: var(--accent); }
+.add-status-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font);
+  margin-bottom: 16px;
+  transition: background 0.15s;
+}
+.add-status-btn:hover { background: var(--navy-mid); }
+
+/* ── EXPORT MODAL ──────────────────────────────────────────────── */
+.export-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
+.export-row:last-child { border-bottom: none; }
+.export-row-lbl { font-size: 13px; font-weight: 500; color: var(--text); }
+.export-row-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.export-dl-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border2);
+  background: var(--surface2);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.export-dl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ── TEMPLATES MODAL ───────────────────────────────────────────── */
+.tpl-item { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 8px; }
+.tpl-item-hd { font-size: 13px; font-weight: 500; color: var(--text); display: flex; align-items: center; justify-content: space-between; }
+.tpl-item-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+.tpl-edit-btn { font-size: 11px; color: var(--accent); cursor: pointer; font-weight: 500; }
+.add-tpl-btn-row {
+  width: 100%;
+  padding: 11px;
+  border: 1.5px dashed var(--border2);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 6px;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.add-tpl-btn-row:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ── TOAST ─────────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 500;
+  opacity: 0;
+  transition: all 0.25s;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--green); }
+.toast.error { background: #dc2626; }
+
+/* ── SPINNER ───────────────────────────────────────────────────── */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .fab { right: 16px; }
+  .bottom-nav { width: 100%; left: 0; transform: none; }
+  #app { max-width: 100%; box-shadow: none; }
+  .modal { max-width: 100%; }
+  .frow { grid-template-columns: 1fr; }
+}
+/* iPhone notch / dynamic island */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .topbar { padding-top: max(16px, env(safe-area-inset-top)); }
+  .bottom-nav { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(var(--nav-h) + max(16px, env(safe-area-inset-bottom))); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SETUP SCREEN ══════════════════════════════════════════════ -->
+<div id="setupScreen">
+  <div class="setup-card">
+    <div class="setup-logo">MortgageLeads</div>
+    <div class="setup-sub">Quick setup to get started. You can change all of this later in Settings.</div>
+
+    <div class="setup-step">
+      <div class="setup-step-title"><span class="setup-step-num">1</span> Your profile</div>
+      <input class="setup-input" id="setupName" placeholder="Full name (e.g. Sarah Mitchell)">
+      <input class="setup-input" id="setupTitle" placeholder="Job title (e.g. Mortgage Adviser)">
+      <input class="setup-input" id="setupBusiness" placeholder="Business name (e.g. Home Finance NZ)">
+      <input class="setup-input" id="setupEmail" type="email" placeholder="Work email (you@business.co.nz)">
+    </div>
+
+    <div class="setup-step">
+      <div class="setup-step-title"><span class="setup-step-num">2</span> Gmail — sending emails</div>
+      <div class="setup-note">
+        To send real emails, paste your <strong>Gmail API credentials</strong> below.<br>
+        Get them free at <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → Create project → Enable Gmail API → OAuth credentials.<br><br>
+        Leave blank to use <strong>mailto: links</strong> (opens your email client) instead.
+      </div>
+      <input class="setup-input mono" id="setupGmailId" placeholder="OAuth Client ID (optional)">
+      <input class="setup-input mono" id="setupGmailSecret" placeholder="OAuth Client Secret (optional)">
+    </div>
+
+    <div class="setup-step">
+      <div class="setup-step-title"><span class="setup-step-num">3</span> Twilio — sending SMS</div>
+      <div class="setup-note">
+        Get a free Twilio account at <a href="https://twilio.com" target="_blank">twilio.com</a>. You'll find these in your Twilio Console.<br><br>
+        Leave blank to use SMS links (opens your phone app) instead.
+      </div>
+      <input class="setup-input mono" id="setupTwilioSid" placeholder="Account SID (optional)">
+      <input class="setup-input mono" id="setupTwilioToken" placeholder="Auth Token (optional)">
+      <input class="setup-input" id="setupTwilioNumber" placeholder="Twilio phone number e.g. +6491234567">
+    </div>
+
+    <button class="setup-btn" onclick="completeSetup()">Get started →</button>
+    <button class="setup-skip" onclick="skipSetup()">Skip for now</button>
+  </div>
+</div>
+
+<!-- ══ APP ═══════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-row1">
+      <div>
+        <div class="topbar-brand" id="topBrand">MortgageLeads</div>
+        <div class="topbar-sub" id="topSub">Tap Settings to set up your profile</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="tbar-btn" onclick="openModal('statusModal')" title="Manage statuses">
+          <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M10 1v3M10 16v3M1 10h3M16 10h3M3.22 3.22l2.12 2.12M14.66 14.66l2.12 2.12M3.22 16.78l2.12-2.12M14.66 5.34l2.12-2.12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="tbar-btn" onclick="openModal('exportModal')" title="Export leads">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 2v10M7 9l3 3 3-3M4 15h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="tbar-btn" onclick="openModal('templatesModal')" title="Email &amp; SMS templates">
+          <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-cell"><div class="stat-n" id="statTotal">0</div><div class="stat-l">Total leads</div></div>
+      <div class="stat-cell"><div class="stat-n" id="statActive">0</div><div class="stat-l">Active</div></div>
+      <div class="stat-cell"><div class="stat-n" id="statPipeline">$0</div><div class="stat-l">Pipeline</div></div>
+      <div class="stat-cell accent"><div class="stat-n highlight" id="stat7d">0</div><div class="stat-l">New · 7 days</div></div>
+      <div class="stat-cell accent"><div class="stat-n highlight" id="stat14d">0</div><div class="stat-l">New · 14 days</div></div>
+      <div class="stat-cell"><div class="stat-n" id="statStarred">0</div><div class="stat-l">Starred</div></div>
+    </div>
+  </div>
+
+  <!-- HOME VIEW WRAP -->
+  <div id="homeViewWrap">
+    <div class="tabs-wrap"><div class="tabs" id="filterTabs"></div></div>
+    <div class="search-wrap">
+      <div class="search-inner">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/><path d="M14 14l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="text" id="searchInput" placeholder="Search leads, referrer, amount..." oninput="renderLeads()">
+      </div>
+    </div>
+    <div class="leads-list" id="leadsList"></div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div id="settingsView">
+    <div class="profile-hd">
+      <div class="profile-av" id="profileAv">?</div>
+      <div>
+        <div class="profile-name" id="profileName">Your name</div>
+        <div class="profile-email" id="profileEmail">your@email.com</div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-section-hd"><div class="set-section-title">Profile</div></div>
+      <div class="set-rows">
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Full name</div></div><input class="set-input" id="sName" placeholder="Sarah Mitchell" oninput="liveUpdateProfile()"></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Job title</div></div><input class="set-input" id="sTitle" placeholder="Mortgage Adviser"></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Business name</div></div><input class="set-input" id="sBusiness" placeholder="Home Finance NZ" oninput="liveUpdateProfile()"></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">FSP number</div></div><input class="set-input" id="sFSP" placeholder="FSP123456"></div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-section-hd"><div class="set-section-title">Contact details</div></div>
+      <div class="set-rows">
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Work email</div><div class="set-row-sub">Used as From address</div></div><input class="set-input" id="sEmail" type="email" placeholder="you@business.co.nz" oninput="liveUpdateProfile()"></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Mobile</div></div><input class="set-input" id="sPhone" type="tel" placeholder="+64 21 000 0000"></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Website</div></div><input class="set-input" id="sWebsite" placeholder="www.yourbusiness.co.nz"></div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-section-hd"><div class="set-section-title">Email signature</div></div>
+      <div class="set-rows">
+        <div class="set-row" style="align-items:flex-start;padding-top:14px;">
+          <div class="set-row-left" style="padding-top:2px;"><div class="set-row-label">Signature</div><div class="set-row-sub">Added to all outgoing emails</div></div>
+          <textarea class="set-input" id="sSignature" rows="4" style="max-width:60%;text-align:right;resize:none;line-height:1.5;" placeholder="Regards,&#10;[Name]&#10;[Title]&#10;[Email]" oninput="liveUpdateSig()"></textarea>
+        </div>
+      </div>
+      <div class="sig-preview">
+        <div class="sig-preview-lbl">Preview</div>
+        <div id="sigPreviewText" style="color:var(--text-muted);font-style:italic;">Your signature will appear here</div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-section-hd"><div class="set-section-title">Integrations</div></div>
+      <div class="set-rows">
+        <div class="set-row">
+          <div class="set-row-left"><div class="set-row-label">Gmail</div><div class="set-row-sub" id="gmailStatusSub">Not configured</div></div>
+          <div class="conn-pill" id="gmailPill" onclick="configureGmail()"><div class="cdot"></div><span id="gmailPillTxt">Configure</span></div>
+        </div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Gmail OAuth Client ID</div></div><input class="set-input mono" id="sGmailId" placeholder="xxxxx.apps.googleusercontent.com" style="max-width:55%;font-size:11px;"></div>
+        <div class="set-row">
+          <div class="set-row-left"><div class="set-row-label">Twilio SMS</div><div class="set-row-sub" id="twilioStatusSub">Not configured</div></div>
+          <div class="conn-pill" id="twilioPill"><div class="cdot"></div><span id="twilioPillTxt">Not set up</span></div>
+        </div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Twilio Account SID</div></div><input class="set-input mono" id="sTwilioSid" placeholder="ACxxxxxxxxxxxxxxxx" style="max-width:55%;font-size:11px;"></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Twilio Auth Token</div></div><input class="set-input mono" id="sTwilioToken" placeholder="xxxxxxxxxxxxxxxx" style="max-width:55%;font-size:11px;"></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Twilio number</div><div class="set-row-sub">Your outbound NZ number</div></div><input class="set-input" id="sTwilioNumber" placeholder="+64912345678"></div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-section-hd"><div class="set-section-title">Notifications</div></div>
+      <div class="set-rows">
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Reminder alerts</div><div class="set-row-sub">Notify on follow-up dates</div></div><label class="toggle-wrap"><input type="checkbox" id="notifReminders" checked><div class="toggle-sl"></div></label></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Pre-approval expiry</div><div class="set-row-sub">Alert 14 days before expiry</div></div><label class="toggle-wrap"><input type="checkbox" id="notifExpiry" checked><div class="toggle-sl"></div></label></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Finance date alerts</div><div class="set-row-sub">Alert 5 days before finance date</div></div><label class="toggle-wrap"><input type="checkbox" id="notifFinance"><div class="toggle-sl"></div></label></div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-section-hd"><div class="set-section-title">Display</div></div>
+      <div class="set-rows">
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Currency</div></div><select class="set-select" id="sCurrency"><option>NZD ($)</option><option>AUD ($)</option><option>USD ($)</option></select></div>
+        <div class="set-row"><div class="set-row-left"><div class="set-row-label">Date format</div></div><select class="set-select" id="sDateFmt"><option>DD/MM/YYYY</option><option>MM/DD/YYYY</option><option>YYYY-MM-DD</option></select></div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-section-hd"><div class="set-section-title" style="color:#dc2626;">Danger zone</div></div>
+      <div class="danger-wrap">
+        <button class="danger-btn" onclick="clearAllData()">Clear all lead data</button>
+      </div>
+    </div>
+
+    <div class="save-bar">
+      <button class="save-btn" onclick="saveSettings()">Save settings</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" id="navHome" onclick="switchView('home')">
+      <svg viewBox="0 0 22 22" fill="none"><path d="M3 10.5L11 3L19 10.5V19H14V14H8V19H3V10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" id="navAdd" onclick="openAddLead()">
+      <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 19c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Add lead</span>
+    </button>
+    <button class="nav-btn" id="navStatuses" onclick="openModal('statusModal')">
+      <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M11 2v2M11 18v2M2 11h2M18 11h2M4.22 4.22l1.42 1.42M16.36 16.36l1.42 1.42M4.22 17.78l1.42-1.42M16.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Statuses</span>
+    </button>
+    <button class="nav-btn" id="navExport" onclick="openModal('exportModal')">
+      <svg viewBox="0 0 22 22" fill="none"><path d="M11 4v9M8 10l3 3 3-3M4 16h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Export</span>
+    </button>
+    <button class="nav-btn" id="navSettings" onclick="switchView('settings')">
+      <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M9.1 2.18A9 9 0 0112.9 2.18L13.65 4.5A7 7 0 0115.5 5.5L17.9 4.82A9 9 0 0119.82 7.9L18.5 9.5A7 7 0 0118.5 12.5L19.82 14.1A9 9 0 0117.9 17.18L15.5 16.5A7 7 0 0113.65 17.5L12.9 19.82A9 9 0 019.1 19.82L8.35 17.5A7 7 0 016.5 16.5L4.1 17.18A9 9 0 012.18 14.1L3.5 12.5A7 7 0 013.5 9.5L2.18 7.9A9 9 0 014.1 4.82L6.5 5.5A7 7 0 018.35 4.5Z" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Settings</span>
+    </button>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fabBtn" onclick="openAddLead()">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+
+<!-- ══ MODALS ═════════════════════════════════════════════════════ -->
+
+<!-- ADD LEAD -->
+<div class="modal-bg" id="addLeadModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title" id="addLeadModalTitle">New lead</span><button class="modal-close" onclick="closeModal('addLeadModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="frow">
+        <div class="fg"><label class="fl">First name</label><input class="fi" id="fn" placeholder="James"></div>
+        <div class="fg"><label class="fl">Last name</label><input class="fi" id="ln" placeholder="Carter"></div>
+      </div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="lemail" type="email" placeholder="james@email.com"></div>
+      <div class="fg"><label class="fl">Phone (for SMS)</label><input class="fi" id="lphone" type="tel" placeholder="+64 21 000 0000"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Loan amount</label><input class="fi" id="lamount" placeholder="$650,000"></div>
+        <div class="fg">
+          <label class="fl" style="display:flex;align-items:center;justify-content:space-between;">
+            Lead type
+            <span onclick="openLeadTypeManager()" style="font-size:10px;color:var(--accent);cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;">⚙ Edit types</span>
+          </label>
+          <select class="fsel" id="lptype"></select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Referrer name</label><input class="fi" id="lreferrerName" placeholder="e.g. Mike T."></div>
+        <div class="fg">
+          <label class="fl">Referrer type</label>
+          <select class="fsel" id="lreferrerType">
+            <option value="">— select —</option>
+            <option>Client</option>
+            <option>Agent</option>
+            <option>Accountant</option>
+            <option>Google</option>
+            <option>Campaign</option>
+            <option>Social media</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Status</label><select class="fsel" id="lstatus"></select></div>
+        <div class="fg"><label class="fl">Follow-up date</label><input class="fi" id="lreminder" type="date"></div>
+      </div>
+      <div class="fg"><label class="fl">Notes</label><textarea class="fi" id="lnotes" rows="3" placeholder="First home buyer, looking to settle by August..."></textarea></div>
+      <button class="btn-primary" id="addLeadSaveBtn" onclick="saveLead()">Save lead</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPOSE (Email + SMS) -->
+<div class="modal-bg" id="composeModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title" id="composeMTitle">Send message</span><button class="modal-close" onclick="closeModal('composeModal')">✕</button></div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="composeTo">To: —</div>
+      <div class="channel-toggle">
+        <button class="ch-btn active-email" id="chEmail" onclick="switchChannel('email')">
+          <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M1 6l7 4 7-4" stroke="currentColor" stroke-width="1.5"/></svg> Email
+        </button>
+        <button class="ch-btn" id="chSms" onclick="switchChannel('sms')">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h12a1 1 0 011 1v7a1 1 0 01-1 1H6l-4 3V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg> Text (SMS)
+        </button>
+      </div>
+
+      <!-- EMAIL PANEL -->
+      <div id="emailPanel">
+        <div class="etype-scroller" id="etypeScroller"></div>
+        <div class="fg"><label class="fl">Subject</label><input class="fi" id="emailSubject"></div>
+        <div class="fg"><label class="fl">Message</label><textarea class="fi" id="emailBody" rows="6"></textarea></div>
+        <div class="sig-block" id="composeSig">Add your signature in Settings</div>
+        <div class="attach-chips" id="attachChips"></div>
+        <div class="attach-zone" onclick="document.getElementById('fileInput').click()">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M13 8.5L7.5 14A4 4 0 012 8.5l6-6a2.5 2.5 0 013.5 3.5L5 12A1 1 0 013.5 10.5L9 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span class="attach-zone-lbl" id="attachZoneLbl">Add attachment</span>
+        </div>
+        <input type="file" id="fileInput" style="display:none" multiple onchange="handleFiles(this)">
+        <button class="btn-primary" id="sendEmailBtn" onclick="sendEmail()">Send email ↗</button>
+      </div>
+
+      <!-- SMS PANEL -->
+      <div id="smsPanel" style="display:none">
+        <div class="sms-info">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3M8 11h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span id="smsInfoText">SMS will be sent via Twilio. Configure in Settings.</span>
+        </div>
+        <div class="etype-scroller" id="stypeScroller"></div>
+        <div class="fg">
+          <label class="fl">Message <span id="charCounter" class="char-counter" style="float:right;text-transform:none;">0/160</span></label>
+          <textarea class="fi" id="smsBody" rows="4" oninput="updateCharCount()"></textarea>
+        </div>
+        <div class="sms-bubble-wrap">
+          <div class="sms-bubble" id="smsBubble">Your message will appear here.</div>
+          <div class="sms-from-lbl" id="smsFromLbl">From: —</div>
+        </div>
+        <button class="btn-primary green" id="sendSmsBtn" onclick="sendSms()">Send SMS ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEAD DETAIL -->
+<div class="modal-bg" id="detailModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="detail-hero">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div><div class="detail-name" id="dName">—</div><div class="detail-sub" id="dSub">—</div></div>
+        <button onclick="toggleDetailStar()" style="background:none;border:none;cursor:pointer;font-size:24px;color:#fbbf24;line-height:1;" id="dStarBtn">☆</button>
+      </div>
+    </div>
+    <div class="detail-actions">
+      <button class="detail-action-btn primary" onclick="openComposeFromDetail('email')">✉ Email</button>
+      <button class="detail-action-btn success" onclick="openComposeFromDetail('sms')">💬 SMS</button>
+      <button class="detail-action-btn" onclick="openEditLead()">✎ Edit</button>
+      <button class="detail-action-btn" onclick="openReminderModal()">📅 Remind</button>
+    </div>
+    <div style="padding:8px 14px 4px;background:var(--surface);border-bottom:1px solid var(--border);">
+      <button class="detail-action-btn success" style="width:100%;font-size:13px;padding:10px;" onclick="openReferrerSms()">📲 SMS update to referrer</button>
+    </div>
+    <div class="status-change-row">
+      <label>Status</label>
+      <select class="fsel" id="dStatus" style="font-size:12px;padding:5px 10px;" onchange="updateDetailStatus()"></select>
+    </div>
+    <div class="detail-info" id="dInfo"></div>
+    <div class="timeline" id="dTimeline"></div>
+    <div style="padding:0 16px 4px;background:var(--surface);">
+      <button class="btn-sec" onclick="closeModal('detailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEAD TYPE MANAGER -->
+<div class="modal-bg" id="leadTypeModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">Lead types</span><button class="modal-close" onclick="closeModal('leadTypeModal')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Add, rename, reorder or remove lead types.</p>
+      <label class="fl">Add new type</label>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <input class="new-status-inp" id="newLeadTypeName" placeholder="e.g. Commercial" style="margin:0;flex:1;">
+        <button class="add-status-btn" style="width:auto;padding:10px 16px;margin:0;" onclick="addLeadType()">Add</button>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:14px;">
+        <label class="fl">Current types</label>
+        <div id="leadTypeListEl"></div>
+      </div>
+      <button class="btn-primary" style="margin-top:16px;" onclick="saveLeadTypes()">Save & apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS MANAGER -->
+<div class="modal-bg" id="statusModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">Manage statuses</span><button class="modal-close" onclick="closeModal('statusModal')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Add, rename, reorder or delete statuses. Changes apply immediately across the app.</p>
+      <label class="fl">Add new status</label>
+      <input class="new-status-inp" id="newStatusName" placeholder="e.g. Documents requested">
+      <label class="fl">Colour</label>
+      <div class="color-swatches" id="colorSwatches"></div>
+      <button class="add-status-btn" onclick="addStatus()">+ Add status</button>
+      <div style="border-top:1px solid var(--border);padding-top:14px;">
+        <label class="fl">Current statuses</label>
+        <div id="statusListEl"></div>
+      </div>
+      <button class="btn-primary" style="margin-top:14px;" onclick="saveStatuses()">Save & apply changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT -->
+<div class="modal-bg" id="exportModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">Export leads</span><button class="modal-close" onclick="closeModal('exportModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="export-row"><div><div class="export-row-lbl">All leads</div><div class="export-row-sub">Every lead with all fields</div></div><button class="export-dl-btn" onclick="doExport('all')">CSV ↓</button></div>
+      <div class="export-row"><div><div class="export-row-lbl">Starred leads</div><div class="export-row-sub">Leads marked for special attention</div></div><button class="export-dl-btn" onclick="doExport('starred')">CSV ↓</button></div>
+      <div class="export-row"><div><div class="export-row-lbl">Reminders due</div><div class="export-row-sub">Leads with follow-up dates set</div></div><button class="export-dl-btn" onclick="doExport('reminders')">CSV ↓</button></div>
+      <div class="export-row"><div><div class="export-row-lbl">Pipeline summary</div><div class="export-row-sub">Status breakdown with loan amounts</div></div><button class="export-dl-btn" onclick="doExport('pipeline')">CSV ↓</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPLATES -->
+<div class="modal-bg" id="templatesModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">Templates</span><button class="modal-close" onclick="closeModal('templatesModal')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;">EMAIL TEMPLATES</p>
+      <div id="tplListEl"></div>
+      <p style="font-size:12px;font-weight:600;color:var(--text-muted);margin:16px 0 10px;">SMS TEMPLATES</p>
+      <div id="stplListEl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- REFERRER SMS MODAL -->
+<div class="modal-bg" id="referrerSmsModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">SMS to referrer</span><button class="modal-close" onclick="closeModal('referrerSmsModal')">✕</button></div>
+    <div class="modal-body">
+      <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:16px;border:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Lead</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);" id="refSmsLeadName">—</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;" id="refSmsLeadStatus">—</div>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Referrer name</label>
+        <input class="fi" id="refSmsName" placeholder="e.g. Mike T." oninput="refreshRefSmsTemplate()">
+      </div>
+      <div class="fg">
+        <label class="fl">Referrer phone number</label>
+        <input class="fi" id="refSmsPhone" type="tel" placeholder="+64 21 000 0000">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label class="fl">Select template</label>
+        <div class="etype-scroller" id="refSmsTemplateScroller"></div>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Message <span id="refSmsCounter" style="float:right;font-size:11px;color:var(--text-muted);text-transform:none;font-weight:400;">0/160</span></label>
+        <textarea class="fi" id="refSmsBody" rows="5" oninput="updateRefSmsCount()" placeholder="Type your message to the referrer..."></textarea>
+      </div>
+
+      <div class="sms-bubble-wrap" style="margin-bottom:14px;">
+        <div class="sms-bubble" id="refSmsBubble" style="background:#e0f2fe;color:#075985;">Your message will appear here.</div>
+        <div class="sms-from-lbl" id="refSmsFromLbl">From: —</div>
+      </div>
+
+      <div class="sms-info">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3M8 11h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span id="refSmsInfoText">SMS sent via Twilio. Configure in Settings.</span>
+      </div>
+
+      <button class="btn-primary green" onclick="sendReferrerSms()">Send SMS to referrer ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMINDER MODAL -->
+<div class="modal-bg" id="reminderModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><span class="modal-title">Set reminder</span><button class="modal-close" onclick="closeModal('reminderModal')">✕</button></div>
+    <div class="modal-body">
+      <div style="font-size:14px;color:var(--text-muted);margin-bottom:16px;" id="reminderLeadName">For: —</div>
+      <div class="fg"><label class="fl">Follow-up date</label><input class="fi" id="reminderDate" type="date"></div>
+      <div class="fg"><label class="fl">Reminder note (optional)</label><input class="fi" id="reminderNote" placeholder="e.g. Call to check on documents"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(1)">Tomorrow</button>
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(3)">In 3 days</button>
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(7)">Next week</button>
+        <button class="btn-sec" style="margin:0" onclick="quickRemind(14)">In 2 weeks</button>
+      </div>
+      <button class="btn-primary" style="margin-top:14px;" onclick="saveReminder()">Set reminder</button>
+      <button class="btn-sec" onclick="clearReminder()">Clear reminder</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ══ COLOUR PALETTE ═══════════════════════════════════════════════
+const COLORS = [
+  {id:'sky',    bg:'#e0f2fe', text:'#075985', dot:'#0ea5e9'},
+  {id:'amber',  bg:'#fef3c7', text:'#92400e', dot:'#f59e0b'},
+  {id:'violet', bg:'#ede9fe', text:'#5b21b6', dot:'#8b5cf6'},
+  {id:'green',  bg:'#dcfce7', text:'#14532d', dot:'#22c55e'},
+  {id:'red',    bg:'#fee2e2', text:'#991b1b', dot:'#ef4444'},
+  {id:'pink',   bg:'#fce7f3', text:'#9d174d', dot:'#ec4899'},
+  {id:'teal',   bg:'#ccfbf1', text:'#134e4a', dot:'#14b8a6'},
+  {id:'orange', bg:'#ffedd5', text:'#9a3412', dot:'#f97316'},
+  {id:'indigo', bg:'#e0e7ff', text:'#3730a3', dot:'#6366f1'},
+  {id:'gray',   bg:'#f3f4f6', text:'#374151', dot:'#9ca3af'},
+];
+
+// ══ DEFAULT DATA ═════════════════════════════════════════════════
+const DEFAULT_STATUSES = [
+  {id:'enquiry',       label:'New enquiry',              color:COLORS[0]},
+  {id:'infoReq',       label:'Info requested',           color:COLORS[1]},
+  {id:'docs',          label:'Docs needed',              color:COLORS[1]},
+  {id:'assess',        label:'HL Assessment',            color:COLORS[2]},
+  {id:'newapp',        label:'New application',          color:COLORS[8]},
+  {id:'lodged',        label:'Lodged',                   color:COLORS[6]},
+  {id:'lender',        label:'Lender assessment',        color:COLORS[2]},
+  {id:'preapproved',   label:'Pre-approved',             color:COLORS[3]},
+  {id:'conditional',   label:'Conditionally approved',   color:COLORS[3]},
+  {id:'unconditional', label:'Unconditionally approved', color:COLORS[3]},
+  {id:'settlement',    label:'Pending settlement',       color:COLORS[7]},
+  {id:'settled',       label:'Settled',                  color:COLORS[3]},
+  {id:'declined',      label:'Declined',                 color:COLORS[4]},
+];
+
+const DEFAULT_LEAD_TYPES = [
+  'Owner-occupier',
+  'Investment',
+  'Refinance',
+  'Construction',
+  'First home',
+  'Top-up',
+  'Bridging',
+];
+
+const REFERRER_TYPES = ['Client','Agent','Accountant','Google','Campaign','Social media','Other'];
+
+const EMAIL_TEMPLATES = [
+  {icon:'👋', label:'Initial info request',   subject:'Thanks for your enquiry – a few questions to get started', body:'Hi [Name],\n\nThank you for reaching out about your mortgage — I\'d love to help you on this journey.\n\nTo get started and find the best options for you, could you let me know:\n\n1. What is the purchase price or property value?\n2. How much deposit do you have available?\n3. What is your combined annual income (before tax)?\n4. Are you a first home buyer?\n5. What is your ideal settlement timeframe?\n\nFeel free to reply to this email or call me directly — I\'m happy to chat at no obligation.'},
+  {icon:'📎', label:'Request documents',      subject:'Documents required – mortgage application', body:'Hi [Name],\n\nTo proceed with your mortgage application we need the following:\n\n• Last 2 payslips\n• 3 months bank statements\n• Photo ID (passport or driver licence)\n• Signed application form\n• Latest rates & insurance notices\n\nPlease reply to this email or upload via our client portal.\n\nWe aim to review within 2 business days of receiving everything.'},
+  {icon:'🔔', label:'Follow up',              subject:'Following up – your mortgage application', body:'Hi [Name],\n\nI wanted to check in on your mortgage application — we\'re making great progress.\n\nI\'d love to connect briefly to walk through next steps and answer any questions you may have.\n\nAre you free for a quick call this week?'},
+  {icon:'⏰', label:'Docs reminder',          subject:'Reminder: outstanding documents needed', body:'Hi [Name],\n\nJust a friendly reminder that we\'re still awaiting a few documents to move your application forward.\n\nWithout these we may not be able to meet your preferred settlement date. Please get in touch if you need any help gathering these.'},
+  {icon:'✅', label:'Pre-approval ready',    subject:'Great news – your pre-approval is ready!', body:'Hi [Name],\n\nExciting news! Your mortgage pre-approval has been issued. Your pre-approval letter is attached to this email.\n\nKey details:\n• Approved amount: [Amount]\n• Expiry date: [Date]\n• Conditions: [Conditions]\n\nFeel free to call me with any questions. Happy house hunting!'},
+  {icon:'🏦', label:'Application submitted', subject:'Your mortgage application has been submitted', body:'Hi [Name],\n\nI\'m pleased to let you know your mortgage application has been formally submitted to the lender. You can expect an update within 3–5 business days.\n\nI\'ll keep you posted as soon as I hear back. In the meantime, please avoid major financial changes (new credit cards, large purchases) as this could affect the assessment.'},
+  {icon:'🎉', label:'Approval confirmed',    subject:'Congratulations – your mortgage is approved!', body:'Hi [Name],\n\nFantastic news — your mortgage has been formally approved! 🎉\n\nNext steps are to review and sign the loan documents, which I\'ll send through shortly. Your solicitor will coordinate settlement from here.\n\nIt has been a pleasure working with you. Please do not hesitate to reach out at any time.'},
+  {icon:'📅', label:'Expiry warning',         subject:'Action needed: pre-approval expiring soon', body:'Hi [Name],\n\nA quick heads up that your pre-approval is due to expire in 14 days.\n\nIf you haven\'t found a property yet, we may need to renew it. Please get in touch so we can discuss your options before it lapses.'},
+  {icon:'📋', label:'Rate update',            subject:'Interest rate update for your application', body:'Hi [Name],\n\nI wanted to keep you informed of a recent interest rate change that may affect your mortgage application.\n\nFixed 1yr: [Rate]%  |  Fixed 2yr: [Rate]%  |  Floating: [Rate]%\n\nI would recommend a quick call to discuss which option best suits your situation. Happy to chat at a time that suits you.'},
+];
+
+const SMS_TEMPLATES = [
+  {icon:'👋', label:'Initial contact',        body:'Hi [Name], it\'s [Your name] from [Business]. Thanks for your enquiry! I\'ll be in touch shortly to discuss your mortgage options. Feel free to call me anytime.'},
+  {icon:'📋', label:'Info request',           body:'Hi [Name], [Your name] here. To get started on your mortgage I\'ve sent you a quick email with a few questions — takes 2 mins. Thanks!'},
+  {icon:'📎', label:'Docs reminder',          body:'Hi [Name], just a reminder we\'re still waiting on your documents to proceed with your mortgage application. Please check your email for the full list. Thanks, [Your name].'},
+  {icon:'📅', label:'Appointment confirm',    body:'Hi [Name], confirming our mortgage appointment on [Date] at [Time]. Let me know if you need to reschedule. – [Your name]'},
+  {icon:'✅', label:'Pre-approval ready',    body:'Great news [Name]! Your pre-approval is ready 🎉 Details sent to your email. Give me a call if you have any questions. – [Your name]'},
+  {icon:'⏰', label:'Expiry warning',         body:'Hi [Name], heads up — your pre-approval expires in 14 days. Please get in touch so we can renew it if needed. – [Your name]'},
+  {icon:'🎉', label:'Approval confirmed',    body:'Congratulations [Name]! Your mortgage is officially approved 🎉 Loan docs are on the way. So excited for you! – [Your name]'},
+  {icon:'🔔', label:'Quick follow-up',        body:'Hi [Name], [Your name] here — just checking in on your mortgage application. Happy to answer any questions. Reply or call anytime.'},
+];
+
+const REFERRER_SMS_TEMPLATES = [
+  {icon:'👋', label:'Application received',  body:'Hi [Referrer], it\'s [Your name]. Just letting you know I\'ve received [Lead]\'s enquiry — thanks for the referral! I\'ll be in touch with them shortly.'},
+  {icon:'📋', label:'Docs requested',        body:'Hi [Referrer], quick update on [Lead] — I\'ve requested their documents and things are moving along well. I\'ll keep you posted!'},
+  {icon:'🏦', label:'App submitted',         body:'Hi [Referrer], great news — [Lead]\'s mortgage application has been submitted to the lender. Expect an outcome in the next few days. Thanks again for the referral!'},
+  {icon:'✅', label:'Pre-approval ready',    body:'Hi [Referrer], fantastic update — [Lead] has been pre-approved! 🎉 They\'re now in a great position to find their property. Thanks for sending them my way.'},
+  {icon:'🎉', label:'Approved',              body:'Hi [Referrer], wonderful news — [Lead]\'s mortgage has been formally approved! 🎉 Really appreciate the referral. Please keep me in mind for anyone else you know needing mortgage advice.'},
+  {icon:'📅', label:'Settlement done',       body:'Hi [Referrer], just wanted to let you know [Lead]\'s mortgage has settled successfully! 🏡 Another happy client — thanks so much for the referral.'},
+  {icon:'🔔', label:'General update',        body:'Hi [Referrer], quick update on [Lead] — things are progressing well and I\'m on top of it. Will keep you updated. Thanks for the referral!'},
+  {icon:'⏰', label:'Needs more time',       body:'Hi [Referrer], just a heads up that [Lead]\'s application needs a bit more time — working through a few things with the lender. Nothing to worry about, I\'ll keep you in the loop.'},
+];
+let statuses = [];
+let leadTypes = [];
+let leads = [];
+let profile = {name:'',title:'',business:'',fsp:'',email:'',phone:'',website:'',signature:'',gmailClientId:'',twilioSid:'',twilioToken:'',twilioNumber:''};
+let selectedColorId = COLORS[0].id;
+let currentFilter = 'all';
+let currentView = 'home';
+let currentDetailId = null;
+let editingLeadId = null;
+let attachments = [];
+let currentChannel = 'email';
+
+// ══ PERSISTENCE ══════════════════════════════════════════════════
+function save() {
+  try {
+    localStorage.setItem('ml_leads', JSON.stringify(leads));
+    localStorage.setItem('ml_statuses', JSON.stringify(statuses));
+    localStorage.setItem('ml_leadtypes', JSON.stringify(leadTypes));
+    localStorage.setItem('ml_profile', JSON.stringify(profile));
+  } catch(e) {}
+}
+function load() {
+  try {
+    const l = localStorage.getItem('ml_leads');
+    const s = localStorage.getItem('ml_statuses');
+    const t = localStorage.getItem('ml_leadtypes');
+    const p = localStorage.getItem('ml_profile');
+    if (l) leads = JSON.parse(l);
+    if (s) statuses = JSON.parse(s); else statuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
+    if (t) leadTypes = JSON.parse(t); else leadTypes = [...DEFAULT_LEAD_TYPES];
+    if (p) profile = Object.assign({name:'',title:'',business:'',fsp:'',email:'',phone:'',website:'',signature:'',gmailClientId:'',twilioSid:'',twilioToken:'',twilioNumber:''}, JSON.parse(p));
+    else statuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
+  } catch(e) {
+    statuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
+    leadTypes = [...DEFAULT_LEAD_TYPES];
+  }
+}
+
+// ══ HELPERS ══════════════════════════════════════════════════════
+function getStatus(id) { return statuses.find(s => s.id === id) || statuses[0] || {id:'?',label:'Unknown',color:COLORS[9]}; }
+function initials(name) { return (name||'').split(' ').filter(Boolean).map(w=>w[0].toUpperCase()).slice(0,2).join('') || '?'; }
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => el.className = 'toast', 2800);
+}
+
+// Modal helpers
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+
+// ══ SETUP ════════════════════════════════════════════════════════
+function completeSetup() {
+  profile.name     = document.getElementById('setupName').value.trim();
+  profile.email    = document.getElementById('setupEmail').value.trim();
+  profile.title    = document.getElementById('setupTitle').value.trim();
+  profile.business = document.getElementById('setupBusiness').value.trim();
+  profile.gmailClientId  = document.getElementById('setupGmailId').value.trim();
+  profile.twilioSid      = document.getElementById('setupTwilioSid').value.trim();
+  profile.twilioToken    = document.getElementById('setupTwilioToken').value.trim();
+  profile.twilioNumber   = document.getElementById('setupTwilioNumber').value.trim();
+  save();
+  document.getElementById('setupScreen').classList.add('hidden');
+  applyProfile();
+}
+function skipSetup() {
+  save();
+  document.getElementById('setupScreen').classList.add('hidden');
+}
+
+// ══ VIEW SWITCHING ════════════════════════════════════════════════
+function switchView(v) {
+  currentView = v;
+  const home = document.getElementById('homeViewWrap');
+  const settings = document.getElementById('settingsView');
+  const fab = document.getElementById('fabBtn');
+  const topBtns = document.querySelectorAll('.tbar-btn');
+  const tabsWrap = document.querySelector('.tabs-wrap');
+  const searchWrap = document.querySelector('.search-wrap');
+
+  ['navHome','navAdd','navStatuses','navExport','navSettings'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) { el.classList.remove('active'); el.querySelector('span').style.color = ''; el.querySelector('svg').style.color = ''; }
+  });
+
+  if (v === 'settings') {
+    home.classList.add('hidden');
+    settings.classList.add('active');
+    fab.style.display = 'none';
+    topBtns.forEach(b => b.style.display = 'none');
+    tabsWrap.style.display = 'none';
+    searchWrap.style.display = 'none';
+    const ns = document.getElementById('navSettings');
+    ns.classList.add('active');
+    ns.querySelector('span').style.color = '#2563eb';
+    populateSettingsForm();
+  } else {
+    home.classList.remove('hidden');
+    settings.classList.remove('active');
+    fab.style.display = '';
+    topBtns.forEach(b => b.style.display = '');
+    tabsWrap.style.display = '';
+    searchWrap.style.display = '';
+    const nh = document.getElementById('navHome');
+    nh.classList.add('active');
+    nh.querySelector('span').style.color = '#2563eb';
+  }
+}
+
+// ══ PROFILE ══════════════════════════════════════════════════════
+function applyProfile() {
+  const name = profile.name || 'MortgageLeads';
+  const biz  = profile.business || 'MortgageLeads';
+  document.getElementById('topBrand').textContent = biz;
+  document.getElementById('topSub').textContent = profile.email ? (profile.name || '') + (profile.name && profile.email ? ' · ' : '') + profile.email : 'Tap Settings to set up your profile';
+  document.getElementById('profileAv').textContent = initials(name);
+  document.getElementById('profileName').textContent = name;
+  document.getElementById('profileEmail').textContent = profile.email || 'your@email.com';
+
+  // Compose button
+  const seBtn = document.getElementById('sendEmailBtn');
+  if(seBtn) seBtn.textContent = profile.email ? 'Send from ' + profile.email + ' ↗' : 'Send email ↗';
+
+  // Compose signature
+  const sigEl = document.getElementById('composeSig');
+  if(sigEl) {
+    const sig = profile.signature || (profile.name ? 'Regards,\n' + profile.name + (profile.title ? '\n'+profile.title : '') + (profile.email ? '\n'+profile.email : '') : '');
+    sigEl.innerHTML = sig ? sig.replace(/\n/g,'<br>') : '<em style="color:var(--text-muted)">Add signature in Settings</em>';
+  }
+
+  // SMS from
+  const smsFrom = document.getElementById('smsFromLbl');
+  if(smsFrom) smsFrom.textContent = 'From: ' + (profile.twilioNumber || 'Configure Twilio in Settings');
+
+  // SMS info
+  const smsInfo = document.getElementById('smsInfoText');
+  if(smsInfo) smsInfo.textContent = profile.twilioSid ? 'SMS will be sent via Twilio from ' + (profile.twilioNumber||'your number') + '.' : 'SMS requires Twilio — configure in Settings. Will use SMS app link for now.';
+
+  // Gmail status
+  updateIntegrationPills();
+}
+
+function updateIntegrationPills() {
+  const gPill = document.getElementById('gmailPill');
+  const gTxt = document.getElementById('gmailPillTxt');
+  const gSub = document.getElementById('gmailStatusSub');
+  if(gPill && gTxt && gSub) {
+    if (profile.gmailClientId) {
+      gPill.className = 'conn-pill on'; gTxt.textContent = 'Configured'; gSub.textContent = 'OAuth Client ID saved';
+    } else {
+      gPill.className = 'conn-pill off'; gTxt.textContent = 'Configure'; gSub.textContent = 'Add Client ID to enable Gmail API';
+    }
+  }
+  const tPill = document.getElementById('twilioPill');
+  const tTxt = document.getElementById('twilioPillTxt');
+  const tSub = document.getElementById('twilioStatusSub');
+  if(tPill && tTxt && tSub) {
+    if (profile.twilioSid && profile.twilioToken) {
+      tPill.className = 'conn-pill on'; tTxt.textContent = 'Configured'; tSub.textContent = profile.twilioNumber || 'Number not set';
+    } else {
+      tPill.className = 'conn-pill off'; tTxt.textContent = 'Not set up'; tSub.textContent = 'Add SID + token to enable SMS';
+    }
+  }
+}
+
+function liveUpdateProfile() {
+  const name = document.getElementById('sName').value.trim() || 'Your name';
+  const email = document.getElementById('sEmail').value.trim() || 'your@email.com';
+  document.getElementById('profileAv').textContent = initials(name);
+  document.getElementById('profileName').textContent = name;
+  document.getElementById('profileEmail').textContent = email;
+}
+
+function liveUpdateSig() {
+  const sig = document.getElementById('sSignature').value.trim();
+  const el = document.getElementById('sigPreviewText');
+  if(sig) { el.style.fontStyle='normal'; el.style.color='var(--text)'; el.innerHTML=sig.replace(/\n/g,'<br>'); }
+  else { el.style.fontStyle='italic'; el.style.color='var(--text-muted)'; el.textContent='Your signature will appear here'; }
+}
+
+function populateSettingsForm() {
+  document.getElementById('sName').value = profile.name || '';
+  document.getElementById('sTitle').value = profile.title || '';
+  document.getElementById('sBusiness').value = profile.business || '';
+  document.getElementById('sFSP').value = profile.fsp || '';
+  document.getElementById('sEmail').value = profile.email || '';
+  document.getElementById('sPhone').value = profile.phone || '';
+  document.getElementById('sWebsite').value = profile.website || '';
+  document.getElementById('sSignature').value = profile.signature || '';
+  document.getElementById('sGmailId').value = profile.gmailClientId || '';
+  document.getElementById('sTwilioSid').value = profile.twilioSid || '';
+  document.getElementById('sTwilioToken').value = profile.twilioToken || '';
+  document.getElementById('sTwilioNumber').value = profile.twilioNumber || '';
+  liveUpdateProfile();
+  liveUpdateSig();
+  updateIntegrationPills();
+}
+
+function saveSettings() {
+  profile.name           = document.getElementById('sName').value.trim();
+  profile.title          = document.getElementById('sTitle').value.trim();
+  profile.business       = document.getElementById('sBusiness').value.trim();
+  profile.fsp            = document.getElementById('sFSP').value.trim();
+  profile.email          = document.getElementById('sEmail').value.trim();
+  profile.phone          = document.getElementById('sPhone').value.trim();
+  profile.website        = document.getElementById('sWebsite').value.trim();
+  profile.signature      = document.getElementById('sSignature').value.trim();
+  profile.gmailClientId  = document.getElementById('sGmailId').value.trim();
+  profile.twilioSid      = document.getElementById('sTwilioSid').value.trim();
+  profile.twilioToken    = document.getElementById('sTwilioToken').value.trim();
+  profile.twilioNumber   = document.getElementById('sTwilioNumber').value.trim();
+  save();
+  applyProfile();
+  toast('Settings saved ✓', 'success');
+}
+
+function configureGmail() {
+  switchView('settings');
+  setTimeout(() => document.getElementById('sGmailId').focus(), 400);
+}
+
+function clearAllData() {
+  if(!confirm('This will permanently delete all lead data. Are you sure?')) return;
+  leads = [];
+  save();
+  renderLeads();
+  toast('All lead data cleared');
+}
+
+// ══ FILTER TABS ══════════════════════════════════════════════════
+function renderFilterTabs() {
+  let html = `<div class="tab active" style="background:var(--navy);border-color:var(--navy);color:#fff" onclick="setFilter('all',this)">All</div>`;
+  html += `<div class="tab" onclick="setFilter('starred',this)">⭐ Starred</div>`;
+  statuses.forEach(s => {
+    html += `<div class="tab" onclick="setFilter('${s.id}',this)">${s.label}</div>`;
+  });
+  document.getElementById('filterTabs').innerHTML = html;
+}
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); t.style.cssText=''; });
+  el.classList.add('active');
+  if(f==='all') { el.style.background='var(--navy)'; el.style.borderColor='var(--navy)'; el.style.color='#fff'; }
+  else if(f==='starred') { el.style.background='#f59e0b'; el.style.borderColor='#f59e0b'; el.style.color='#fff'; }
+  else { const s=getStatus(f); el.style.background=s.color.dot; el.style.borderColor=s.color.dot; el.style.color='#fff'; }
+  renderLeads();
+}
+
+function populateStatusDropdowns() {
+  const opts = statuses.map(s=>`<option value="${s.id}">${s.label}</option>`).join('');
+  document.getElementById('lstatus').innerHTML = opts;
+  document.getElementById('dStatus').innerHTML = opts;
+}
+
+// ══ STATUS MANAGER ════════════════════════════════════════════════
+function renderColorSwatches() {
+  document.getElementById('colorSwatches').innerHTML = COLORS.map(c =>
+    `<div class="color-sw${c.id===selectedColorId?' active':''}" style="background:${c.dot}" title="${c.id}" onclick="selectColor('${c.id}')"></div>`
+  ).join('');
+}
+function selectColor(id) { selectedColorId=id; renderColorSwatches(); }
+function renderStatusList() {
+  document.getElementById('statusListEl').innerHTML = statuses.map((s,i) =>
+    `<div class="status-item">
+      <div class="status-color-dot" style="background:${s.color.dot}"></div>
+      <input class="status-name-inp" value="${s.label}" onchange="statuses[${i}].label=this.value">
+      <div style="display:flex;gap:4px">
+        ${i>0?`<button class="status-act-btn" onclick="mvSt(${i},-1)">↑</button>`:'<div style="width:24px"></div>'}
+        ${i<statuses.length-1?`<button class="status-act-btn" onclick="mvSt(${i},1)">↓</button>`:'<div style="width:24px"></div>'}
+        <button class="status-act-btn" onclick="delSt(${i})">✕</button>
+      </div>
+    </div>`
+  ).join('');
+}
+function mvSt(i,d){const j=i+d;if(j<0||j>=statuses.length)return;[statuses[i],statuses[j]]=[statuses[j],statuses[i]];renderStatusList();}
+function delSt(i){if(statuses.length<=1){toast('Need at least one status','error');return;}const gone=statuses[i].id;statuses.splice(i,1);leads.forEach(l=>{if(l.statusId===gone)l.statusId=statuses[0].id;});renderStatusList();}
+function addStatus(){const n=document.getElementById('newStatusName').value.trim();if(!n){toast('Enter a status name','error');return;}const c=COLORS.find(x=>x.id===selectedColorId)||COLORS[0];statuses.push({id:'c_'+Date.now(),label:n,color:c});document.getElementById('newStatusName').value='';renderStatusList();}
+function saveStatuses(){save();renderFilterTabs();renderLeads();populateStatusDropdowns();closeModal('statusModal');toast('Statuses saved ✓','success');}
+
+// ══ LEAD TYPES MANAGER ════════════════════════════════════════════
+function populateLeadTypeDropdown() {
+  const el = document.getElementById('lptype');
+  if(!el) return;
+  const current = el.value;
+  el.innerHTML = leadTypes.map(t=>`<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+  if(current) el.value = current;
+}
+
+function renderLeadTypeList() {
+  document.getElementById('leadTypeListEl').innerHTML = leadTypes.map((t,i) =>
+    `<div class="status-item">
+      <input class="status-name-inp" value="${escHtml(t)}" onchange="leadTypes[${i}]=this.value">
+      <div style="display:flex;gap:4px">
+        ${i>0?`<button class="status-act-btn" onclick="mvLt(${i},-1)">↑</button>`:'<div style="width:24px"></div>'}
+        ${i<leadTypes.length-1?`<button class="status-act-btn" onclick="mvLt(${i},1)">↓</button>`:'<div style="width:24px"></div>'}
+        <button class="status-act-btn" onclick="delLt(${i})">✕</button>
+      </div>
+    </div>`
+  ).join('');
+}
+function mvLt(i,d){const j=i+d;if(j<0||j>=leadTypes.length)return;[leadTypes[i],leadTypes[j]]=[leadTypes[j],leadTypes[i]];renderLeadTypeList();}
+function delLt(i){if(leadTypes.length<=1){toast('Need at least one lead type','error');return;}leadTypes.splice(i,1);renderLeadTypeList();}
+function addLeadType(){const n=document.getElementById('newLeadTypeName').value.trim();if(!n){toast('Enter a lead type name','error');return;}leadTypes.push(n);document.getElementById('newLeadTypeName').value='';renderLeadTypeList();}
+function saveLeadTypes(){save();populateLeadTypeDropdown();closeModal('leadTypeModal');toast('Lead types saved ✓','success');}
+
+function openLeadTypeManager() {
+  renderLeadTypeList();
+  openModal('leadTypeModal');
+}
+
+function updateStats() {
+  const now = new Date();
+  now.setHours(23,59,59,999);
+
+  // Parse a stored date string (DD/MM/YYYY or fallback) to a Date object
+  function parseLeadDate(str) {
+    if(!str) return null;
+    // DD/MM/YYYY
+    const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if(m) return new Date(+m[3], +m[2]-1, +m[1]);
+    // Try native parse as fallback
+    const d = new Date(str);
+    return isNaN(d) ? null : d;
+  }
+
+  const cutoff7  = new Date(now); cutoff7.setDate(now.getDate() - 7);  cutoff7.setHours(0,0,0,0);
+  const cutoff14 = new Date(now); cutoff14.setDate(now.getDate() - 14); cutoff14.setHours(0,0,0,0);
+
+  const new7  = leads.filter(l => { const d = parseLeadDate(l.createdAt); return d && d >= cutoff7; }).length;
+  const new14 = leads.filter(l => { const d = parseLeadDate(l.createdAt); return d && d >= cutoff14; }).length;
+
+  document.getElementById('statTotal').textContent = leads.length;
+  document.getElementById('statActive').textContent = leads.filter(l=>!['settled','declined'].includes(l.statusId)).length;
+  document.getElementById('statStarred').textContent = leads.filter(l=>l.starred).length;
+  document.getElementById('stat7d').textContent = new7;
+  document.getElementById('stat14d').textContent = new14;
+  const p = leads.reduce((s,l)=>s+(l.amountVal||0),0);
+  document.getElementById('statPipeline').textContent = p>=1000?'$'+(p/1000).toFixed(1)+'M':p?'$'+p+'k':'$0';
+}
+
+// ══ LEAD RENDERING ════════════════════════════════════════════════
+function renderLeads() {
+  const q = (document.getElementById('searchInput').value||'').toLowerCase();
+  let filtered = leads.filter(l => {
+    if(currentFilter==='starred') return l.starred;
+    if(currentFilter!=='all') return l.statusId===currentFilter;
+    return true;
+  }).filter(l => !q || l.name.toLowerCase().includes(q) || (l.referrer||'').toLowerCase().includes(q) || (l.amount||'').toLowerCase().includes(q) || (l.email||'').toLowerCase().includes(q));
+
+  const starred = currentFilter!=='starred' ? filtered.filter(l=>l.starred) : filtered;
+  const rest    = currentFilter!=='starred' ? filtered.filter(l=>!l.starred) : [];
+  const withR   = rest.filter(l=>l.reminder);
+  const noR     = rest.filter(l=>!l.reminder);
+
+  let html = '';
+  if(starred.length) { if(currentFilter!=='starred') html+='<div class="section-lbl">⭐ Starred</div>'; starred.forEach(l=>html+=rowHTML(l)); }
+  if(withR.length)   { html+='<div class="section-lbl">Reminders due</div>'; withR.forEach(l=>html+=rowHTML(l)); }
+  if(noR.length)     { if(starred.length||withR.length) html+='<div class="section-lbl">All leads</div>'; noR.forEach(l=>html+=rowHTML(l)); }
+  if(!filtered.length) html=`<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">${leads.length?'No leads match your filter':'No leads yet'}</div><div class="empty-sub">${leads.length?'Try a different filter or search term':'Tap the + button to add your first lead'}</div></div>`;
+
+  document.getElementById('leadsList').innerHTML = html;
+  updateStats();
+}
+
+function rowHTML(l) {
+  const s = getStatus(l.statusId);
+  const badge = l.reminder
+    ? `<span class="reminder-pill"><span class="rdot"></span>${formatDate(l.reminder)}</span>`
+    : `<span class="status-pill" style="background:${s.color.bg};color:${s.color.text}">${s.label}</span>`;
+  return `<div class="${l.starred?'lead-row starred':'lead-row'}" onclick="openDetail(${l.id})">
+    <button class="star-btn ${l.starred?'on':''}" onclick="event.stopPropagation();toggleStar(${l.id})">★</button>
+    <div class="lead-info">
+      <div class="lead-name">${escHtml(l.name)}</div>
+      <div class="lead-meta">${escHtml(l.amount||'')}${l.type?' · '+escHtml(l.type):''}${(l.referrerName||l.referrer)?' · via '+escHtml(l.referrerName||l.referrer)+(l.referrerType?' ('+escHtml(l.referrerType)+')':''):''}</div>
+    </div>
+    ${badge}
+    <div class="row-btns">
+      <button class="row-icon-btn email" title="Email" onclick="event.stopPropagation();openCompose(${l.id},'email')">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M1 6l7 4 7-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <button class="row-icon-btn sms" title="SMS" onclick="event.stopPropagation();openCompose(${l.id},'sms')">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h12a1 1 0 011 1v7a1 1 0 01-1 1H6l-4 3V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>`;
+}
+
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function toggleStar(id) {
+  const l = leads.find(x=>x.id===id);
+  if(l) { l.starred=!l.starred; save(); renderLeads(); }
+}
+
+// ══ ADD / EDIT LEAD ══════════════════════════════════════════════
+function openAddLead() {
+  editingLeadId = null;
+  document.getElementById('addLeadModalTitle').textContent = 'New lead';
+  document.getElementById('addLeadSaveBtn').textContent = 'Save lead';
+  ['fn','ln','lemail','lphone','lamount','lreferrerName','lreminder','lnotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  populateLeadTypeDropdown();
+  document.getElementById('lptype').selectedIndex = 0;
+  document.getElementById('lstatus').selectedIndex = 0;
+  document.getElementById('lreferrerType').selectedIndex = 0;
+  openModal('addLeadModal');
+}
+
+function openEditLead() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  editingLeadId = l.id;
+  closeModal('detailModal');
+  setTimeout(() => {
+    document.getElementById('addLeadModalTitle').textContent = 'Edit lead';
+    document.getElementById('addLeadSaveBtn').textContent = 'Save changes';
+    const nameParts = l.name.split(' ');
+    document.getElementById('fn').value = nameParts[0] || '';
+    document.getElementById('ln').value = nameParts.slice(1).join(' ') || '';
+    document.getElementById('lemail').value = l.email || '';
+    document.getElementById('lphone').value = l.phone || '';
+    document.getElementById('lamount').value = l.amount || '';
+    document.getElementById('lreferrerName').value = l.referrerName || l.referrer || '';
+    document.getElementById('lnotes').value = l.notes || '';
+    document.getElementById('lreminder').value = toInputDate(l.reminder || '');
+    // Lead type
+    populateLeadTypeDropdown();
+    const ptEl = document.getElementById('lptype');
+    for(let i=0;i<ptEl.options.length;i++){if(ptEl.options[i].value===l.type||ptEl.options[i].text===l.type){ptEl.selectedIndex=i;break;}}
+    // Referrer type
+    const rtEl = document.getElementById('lreferrerType');
+    for(let i=0;i<rtEl.options.length;i++){if(rtEl.options[i].value===(l.referrerType||'')){rtEl.selectedIndex=i;break;}}
+    // Status
+    const stEl = document.getElementById('lstatus');
+    for(let i=0;i<stEl.options.length;i++){if(stEl.options[i].value===l.statusId){stEl.selectedIndex=i;break;}}
+    openModal('addLeadModal');
+  }, 250);
+}
+
+function saveLead() {
+  const first = document.getElementById('fn').value.trim();
+  const last  = document.getElementById('ln').value.trim();
+  if(!first && !last) { toast('Please enter a name','error'); return; }
+  const name = (first+' '+last).trim();
+  const amt  = document.getElementById('lamount').value.trim();
+  const val  = parseFloat(amt.replace(/[$,k]/gi,'')) || 0;
+  const normVal = amt.toLowerCase().includes('k') ? val : val >= 1000 ? val/1000 : val;
+  const statusId = document.getElementById('lstatus').value;
+  const rawDate = document.getElementById('lreminder').value;
+  const reminder = rawDate ? formatDate(rawDate) : null;
+
+  if(editingLeadId) {
+    const l = leads.find(x=>x.id===editingLeadId);
+    if(l) {
+      l.name = name;
+      l.amount = amt;
+      l.amountVal = normVal;
+      l.type = document.getElementById('lptype').value;
+      l.statusId = statusId;
+      l.email = document.getElementById('lemail').value.trim();
+      l.phone = document.getElementById('lphone').value.trim();
+      l.referrerName = document.getElementById('lreferrerName').value.trim();
+      l.referrerType = document.getElementById('lreferrerType').value;
+      l.referrer = l.referrerName; // keep legacy field in sync for display
+      l.reminder = reminder;
+      l.notes = document.getElementById('lnotes').value.trim();
+      if(!l.activity) l.activity=[];
+      l.activity.unshift({type:'neutral',title:'Lead updated',date:new Date().toLocaleDateString('en-NZ')});
+    }
+    save(); closeModal('addLeadModal'); renderLeads(); toast(name+' updated ✓','success');
+  } else {
+    const referrerName = document.getElementById('lreferrerName').value.trim();
+    const referrerType = document.getElementById('lreferrerType').value;
+    leads.unshift({
+      id:Date.now(), name, amount:amt, amountVal:normVal,
+      type: document.getElementById('lptype').value,
+      statusId,
+      email: document.getElementById('lemail').value.trim(),
+      phone: document.getElementById('lphone').value.trim(),
+      referrerName,
+      referrerType,
+      referrer: referrerName, // legacy display field
+      reminder,
+      starred: false,
+      notes: document.getElementById('lnotes').value.trim(),
+      createdAt: new Date().toLocaleDateString('en-NZ'),
+      activity: [{type:'neutral',title:'Lead created',date:new Date().toLocaleDateString('en-NZ')}]
+    });
+    save(); closeModal('addLeadModal'); renderLeads(); toast(name+' added ✓','success');
+  }
+  editingLeadId = null;
+}
+
+// ══ DETAIL ═══════════════════════════════════════════════════════
+function openDetail(id) {
+  const l = leads.find(x=>x.id===id);
+  if(!l) return;
+  currentDetailId = id;
+  document.getElementById('dName').textContent = l.name;
+  document.getElementById('dSub').textContent = (l.amount||'') + (l.type?' · '+l.type:'');
+  document.getElementById('dStarBtn').textContent = l.starred ? '★' : '☆';
+  document.getElementById('dStatus').value = l.statusId;
+  document.getElementById('dInfo').innerHTML = `
+    <div class="detail-info-item"><label>Email</label><span>${escHtml(l.email||'—')}</span></div>
+    <div class="detail-info-item"><label>Phone</label><span>${escHtml(l.phone||'—')}</span></div>
+    <div class="detail-info-item"><label>Referrer</label><span>${escHtml(l.referrerName||l.referrer||'—')}</span></div>
+    <div class="detail-info-item"><label>Referrer type</label><span>${escHtml(l.referrerType||'—')}</span></div>
+    <div class="detail-info-item"><label>Follow-up</label><span>${l.reminder ? formatDate(l.reminder) : 'None set'}</span></div>
+    <div class="detail-info-item"><label>Created</label><span>${escHtml(l.createdAt||'—')}</span></div>
+    ${l.notes?`<div class="detail-info-item" style="grid-column:1/-1"><label>Notes</label><span>${escHtml(l.notes)}</span></div>`:''}
+  `;
+  // Render real activity timeline
+  const activity = l.activity || [];
+  if(activity.length === 0) {
+    document.getElementById('dTimeline').innerHTML = `
+      <div class="tl-hd">Activity</div>
+      <div style="font-size:13px;color:var(--text-muted);padding:8px 0 12px;font-style:italic;">No activity recorded yet.</div>`;
+  } else {
+    const items = activity.map((a, i) => {
+      const isLast = i === activity.length - 1;
+      return `<div class="tl-item">
+        <div class="tl-dot-col">
+          <div class="tl-dot ${a.type||'neutral'}"></div>
+          ${!isLast ? '<div class="tl-line"></div>' : ''}
+        </div>
+        <div><div class="tl-title">${escHtml(a.title)}</div><div class="tl-date">${escHtml(a.date||'')}</div></div>
+      </div>`;
+    }).join('');
+    document.getElementById('dTimeline').innerHTML = `<div class="tl-hd">Activity</div>${items}`;
+  }
+  openModal('detailModal');
+}
+
+function toggleDetailStar() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  l.starred = !l.starred;
+  document.getElementById('dStarBtn').textContent = l.starred ? '★' : '☆';
+  save(); renderLeads();
+}
+
+function updateDetailStatus() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  const newStatus = document.getElementById('dStatus').value;
+  const oldLabel = getStatus(l.statusId).label;
+  const newLabel = getStatus(newStatus).label;
+  l.statusId = newStatus;
+  if(!l.activity) l.activity = [];
+  l.activity.unshift({type:'neutral', title:'Status changed to ' + newLabel, date: new Date().toLocaleString('en-NZ',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})});
+  save(); renderLeads();
+  // Re-render timeline in place
+  openDetail(currentDetailId);
+  toast('Status updated to ' + newLabel);
+}
+
+function openComposeFromDetail(ch) {
+  closeModal('detailModal');
+  setTimeout(() => openCompose(currentDetailId, ch), 250);
+}
+
+// ══ COMPOSE ══════════════════════════════════════════════════════
+function openCompose(id, channel) {
+  const l = leads.find(x=>x.id===id);
+  if(!l) return;
+  currentDetailId = id;
+  attachments = [];
+  updateAttachUI();
+  document.getElementById('composeTo').textContent = channel==='sms'
+    ? 'To: '+l.name+' · '+(l.phone||'No phone set')
+    : 'To: '+l.name+(l.email?' <'+l.email+'>':'— no email set');
+  renderEtypes();
+  renderStypes();
+  switchChannel(channel);
+  openModal('composeModal');
+}
+
+function switchChannel(ch) {
+  currentChannel = ch;
+  const ep = document.getElementById('emailPanel');
+  const sp = document.getElementById('smsPanel');
+  const ce = document.getElementById('chEmail');
+  const cs = document.getElementById('chSms');
+  if(ch==='email') {
+    ep.style.display=''; sp.style.display='none';
+    ce.className='ch-btn active-email'; cs.className='ch-btn';
+    document.getElementById('composeMTitle').textContent = 'Send email';
+    selectEtype(0);
+  } else {
+    ep.style.display='none'; sp.style.display='';
+    ce.className='ch-btn'; cs.className='ch-btn active-sms';
+    document.getElementById('composeMTitle').textContent = 'Send text message';
+    selectStype(0);
+  }
+}
+
+function renderEtypes() {
+  document.getElementById('etypeScroller').innerHTML = EMAIL_TEMPLATES.map((t,i)=>
+    `<div class="etype-card" onclick="selectEtype(${i})"><div class="etype-icon">${t.icon}</div><div class="etype-lbl">${t.label}</div></div>`
+  ).join('');
+}
+function selectEtype(idx) {
+  document.querySelectorAll('.etype-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  document.getElementById('emailSubject').value = EMAIL_TEMPLATES[idx].subject;
+  document.getElementById('emailBody').value = EMAIL_TEMPLATES[idx].body;
+}
+
+function renderStypes() {
+  document.getElementById('stypeScroller').innerHTML = SMS_TEMPLATES.map((t,i)=>
+    `<div class="stype-card" onclick="selectStype(${i})"><div class="stype-icon">${t.icon}</div><div class="stype-lbl">${t.label}</div></div>`
+  ).join('');
+}
+function selectStype(idx) {
+  document.querySelectorAll('.stype-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  let body = SMS_TEMPLATES[idx].body;
+  body = body.replace(/\[Your name\]/g, profile.name||'[Your name]').replace(/\[Business\]/g, profile.business||'[Business]');
+  document.getElementById('smsBody').value = body;
+  updateCharCount();
+}
+
+function updateCharCount() {
+  const len = document.getElementById('smsBody').value.length;
+  const msgs = Math.ceil(len/160)||1;
+  const el = document.getElementById('charCounter');
+  el.textContent = len+'/'+(msgs*160)+(msgs>1?' ('+msgs+' SMS)':'');
+  el.className = 'char-counter'+(len>160?' over':len>130?' warn':'');
+  document.getElementById('smsBubble').innerHTML = (document.getElementById('smsBody').value||'Your message will appear here.').replace(/\n/g,'<br>');
+}
+
+function handleFiles(input) {
+  Array.from(input.files).forEach(f => attachments.push({name:f.name, file:f}));
+  updateAttachUI();
+}
+function removeAttach(i) { attachments.splice(i,1); updateAttachUI(); }
+function updateAttachUI() {
+  document.getElementById('attachChips').innerHTML = attachments.map((a,i)=>
+    `<div class="attach-chip">📄 ${escHtml(a.name)}<span class="attach-rm" onclick="removeAttach(${i})">✕</span></div>`
+  ).join('');
+  document.getElementById('attachZoneLbl').textContent = attachments.length ? 'Add more files' : 'Add attachment';
+}
+
+// ══ SEND EMAIL ════════════════════════════════════════════════════
+async function sendEmail() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l || !l.email) { toast('No email address for this lead','error'); return; }
+  const subject = document.getElementById('emailSubject').value;
+  const body    = document.getElementById('emailBody').value;
+  const sig     = profile.signature || (profile.name?'Regards,\n'+profile.name+(profile.title?'\n'+profile.title:'')+(profile.email?'\n'+profile.email:''):'');
+  const fullBody = body + (sig ? '\n\n' + sig : '');
+
+  if(profile.gmailClientId) {
+    // Gmail API via OAuth implicit flow
+    await sendViaGmail(l.email, subject, fullBody);
+  } else {
+    // Fallback: mailto link
+    const mailto = `mailto:${encodeURIComponent(l.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}`;
+    window.open(mailto, '_blank');
+    toast('Opening email client…');
+    logActivity(l.id, 'email', 'Email drafted: ' + subject);
+    closeModal('composeModal');
+  }
+}
+
+async function sendViaGmail(to, subject, body) {
+  const btn = document.getElementById('sendEmailBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Sending…';
+  try {
+    // Load Google API client
+    if(!window.gapi) {
+      await loadScript('https://apis.google.com/js/api.js');
+      await new Promise(resolve => gapi.load('client:auth2', resolve));
+      await gapi.client.init({ clientId: profile.gmailClientId, scope: 'https://www.googleapis.com/auth/gmail.send', discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'] });
+    }
+    const authInstance = gapi.auth2.getAuthInstance();
+    if(!authInstance.isSignedIn.get()) await authInstance.signIn();
+
+    // Build RFC 2822 message
+    const raw = btoa(unescape(encodeURIComponent(
+      `From: ${profile.name||''} <${profile.email}>\r\nTo: ${to}\r\nSubject: ${subject}\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n${body}`
+    ))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+
+    await gapi.client.gmail.users.messages.send({ userId:'me', resource:{ raw } });
+    const l = leads.find(x=>x.id===currentDetailId);
+    if(l) logActivity(l.id,'email','Email sent: '+subject);
+    toast('Email sent ✓','success');
+    closeModal('composeModal');
+  } catch(err) {
+    console.error(err);
+    toast('Gmail error — check console','error');
+  } finally {
+    btn.disabled=false;
+    btn.textContent = profile.email?'Send from '+profile.email+' ↗':'Send email ↗';
+  }
+}
+
+// ══ SEND SMS ══════════════════════════════════════════════════════
+async function sendSms() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l||!l.phone) { toast('No phone number for this lead','error'); return; }
+  const body = document.getElementById('smsBody').value.trim();
+  if(!body) { toast('Message is empty','error'); return; }
+
+  if(profile.twilioSid && profile.twilioToken && profile.twilioNumber) {
+    await sendViaTwilio(l.phone, body, l);
+  } else {
+    // Fallback: sms: link
+    window.open(`sms:${l.phone}${/iPhone|iPad|Mac/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(body)}`, '_blank');
+    toast('Opening SMS app…');
+    logActivity(l.id,'sms','SMS drafted');
+    closeModal('composeModal');
+  }
+}
+
+async function sendViaTwilio(to, body, lead) {
+  const btn = document.getElementById('sendSmsBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Sending…';
+  try {
+    // NOTE: In production, call your own backend endpoint (never expose Twilio credentials in client-side JS).
+    // This direct API call is for demo/development only.
+    const auth = btoa(profile.twilioSid+':'+profile.twilioToken);
+    const resp = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${profile.twilioSid}/Messages.json`, {
+      method:'POST',
+      headers:{'Authorization':'Basic '+auth,'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({To:to, From:profile.twilioNumber, Body:body})
+    });
+    if(resp.ok) {
+      logActivity(lead.id,'sms','SMS sent: '+body.substring(0,40)+'…');
+      toast('SMS sent ✓','success');
+      closeModal('composeModal');
+    } else {
+      const err = await resp.json();
+      toast('Twilio error: '+(err.message||resp.status),'error');
+    }
+  } catch(err) {
+    toast('SMS error — check your Twilio credentials','error');
+    console.error(err);
+  } finally {
+    btn.disabled=false;
+    btn.textContent='Send SMS via Twilio ↗';
+  }
+}
+
+// ══ REFERRER SMS ══════════════════════════════════════════════════
+function openReferrerSms() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  const s = getStatus(l.statusId);
+  document.getElementById('refSmsLeadName').textContent = l.name;
+  document.getElementById('refSmsLeadStatus').textContent = s.label + (l.amount ? ' · ' + l.amount : '');
+  document.getElementById('refSmsName').value = l.referrer || '';
+  document.getElementById('refSmsPhone').value = '';
+  document.getElementById('refSmsFromLbl').textContent = 'From: ' + (profile.twilioNumber || 'Configure Twilio in Settings');
+  document.getElementById('refSmsInfoText').textContent = profile.twilioSid
+    ? 'SMS will be sent via Twilio from ' + (profile.twilioNumber || 'your number') + '.'
+    : 'SMS requires Twilio — configure in Settings. Will open SMS app instead.';
+  renderRefSmsTemplates();
+  selectRefSmsTemplate(0);
+  closeModal('detailModal');
+  setTimeout(() => openModal('referrerSmsModal'), 250);
+}
+
+function renderRefSmsTemplates() {
+  document.getElementById('refSmsTemplateScroller').innerHTML = REFERRER_SMS_TEMPLATES.map((t,i) =>
+    `<div class="etype-card${i===0?' active':''}" onclick="selectRefSmsTemplate(${i})">
+      <div class="etype-icon">${t.icon}</div>
+      <div class="etype-lbl">${t.label}</div>
+    </div>`
+  ).join('');
+}
+
+function selectRefSmsTemplate(idx) {
+  document.querySelectorAll('#refSmsTemplateScroller .etype-card').forEach((c,i) => c.classList.toggle('active', i===idx));
+  const l = leads.find(x=>x.id===currentDetailId);
+  const leadName = l ? l.name.split(' ')[0] : '[Lead]';
+  const refName = document.getElementById('refSmsName').value.trim() || '[Referrer]';
+  let body = REFERRER_SMS_TEMPLATES[idx].body
+    .replace(/\[Lead\]/g, leadName)
+    .replace(/\[Referrer\]/g, refName)
+    .replace(/\[Your name\]/g, profile.name || '[Your name]');
+  document.getElementById('refSmsBody').value = body;
+  updateRefSmsCount();
+}
+
+function refreshRefSmsTemplate() {
+  const active = document.querySelector('#refSmsTemplateScroller .etype-card.active');
+  if(!active) return;
+  const idx = Array.from(document.querySelectorAll('#refSmsTemplateScroller .etype-card')).indexOf(active);
+  if(idx >= 0) selectRefSmsTemplate(idx);
+}
+
+function updateRefSmsCount() {
+  const len = document.getElementById('refSmsBody').value.length;
+  const msgs = Math.ceil(len/160) || 1;
+  document.getElementById('refSmsCounter').textContent = len + '/' + (msgs*160) + (msgs>1?' ('+msgs+' SMS)':'');
+  document.getElementById('refSmsBubble').innerHTML = (document.getElementById('refSmsBody').value || 'Your message will appear here.').replace(/\n/g,'<br>');
+}
+
+async function sendReferrerSms() {
+  const phone = document.getElementById('refSmsPhone').value.trim();
+  const body  = document.getElementById('refSmsBody').value.trim();
+  const refName = document.getElementById('refSmsName').value.trim() || 'Referrer';
+  if(!phone) { toast('Enter the referrer\'s phone number','error'); return; }
+  if(!body)  { toast('Message is empty','error'); return; }
+
+  const l = leads.find(x=>x.id===currentDetailId);
+
+  if(profile.twilioSid && profile.twilioToken && profile.twilioNumber) {
+    const btn = document.querySelector('#referrerSmsModal .btn-primary');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Sending…';
+    try {
+      const auth = btoa(profile.twilioSid+':'+profile.twilioToken);
+      const resp = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${profile.twilioSid}/Messages.json`, {
+        method:'POST',
+        headers:{'Authorization':'Basic '+auth,'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({To:phone, From:profile.twilioNumber, Body:body})
+      });
+      if(resp.ok) {
+        if(l) logActivity(l.id, 'sms', 'SMS sent to referrer ' + refName);
+        toast('SMS sent to referrer ✓','success');
+        closeModal('referrerSmsModal');
+      } else {
+        const err = await resp.json();
+        toast('Twilio error: '+(err.message||resp.status),'error');
+      }
+    } catch(e) {
+      toast('SMS error — check Twilio credentials','error');
+    } finally {
+      const btn2 = document.querySelector('#referrerSmsModal .btn-primary');
+      if(btn2) { btn2.disabled=false; btn2.textContent='Send SMS to referrer ↗'; }
+    }
+  } else {
+    // Fallback to SMS app
+    window.open(`sms:${phone}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(body)}`, '_blank');
+    if(l) logActivity(l.id, 'sms', 'SMS drafted for referrer ' + refName);
+    toast('Opening SMS app…');
+    closeModal('referrerSmsModal');
+  }
+}
+
+// ══ DATE HELPERS ══════════════════════════════════════════════════
+// Converts YYYY-MM-DD (HTML date input value) to DD/MM/YYYY for display
+function formatDate(val) {
+  if(!val) return '';
+  // Already in DD/MM/YYYY
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(val)) return val;
+  // YYYY-MM-DD from input
+  const m = val.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return m[3]+'/'+m[2]+'/'+m[1];
+  return val;
+}
+// Converts DD/MM/YYYY back to YYYY-MM-DD for setting input value
+function toInputDate(val) {
+  if(!val) return '';
+  if(/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  const m = val.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(m) return m[3]+'-'+m[2]+'-'+m[1];
+  return val;
+}
+// Returns today + N days as YYYY-MM-DD
+function daysFromNow(n) {
+  const d = new Date(); d.setDate(d.getDate()+n);
+  return d.toISOString().split('T')[0];
+}
+
+// ══ REMINDER ══════════════════════════════════════════════════════
+function openReminderModal() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  document.getElementById('reminderLeadName').textContent = 'For: '+l.name;
+  document.getElementById('reminderDate').value = toInputDate(l.reminder||'');
+  document.getElementById('reminderNote').value = l.reminderNote || '';
+  openModal('reminderModal');
+}
+function quickRemind(days) {
+  document.getElementById('reminderDate').value = daysFromNow(days);
+}
+function saveReminder() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  const raw = document.getElementById('reminderDate').value;
+  if(!raw) { toast('Please pick a date','error'); return; }
+  l.reminder = formatDate(raw);
+  l.reminderNote = document.getElementById('reminderNote').value.trim();
+  if(!l.activity) l.activity=[];
+  l.activity.unshift({type:'neutral',title:'Reminder set for '+l.reminder,date:new Date().toLocaleDateString('en-NZ')});
+  save(); renderLeads(); closeModal('reminderModal'); closeModal('detailModal');
+  toast('Reminder set for '+l.reminder+' ✓','success');
+}
+function clearReminder() {
+  const l = leads.find(x=>x.id===currentDetailId);
+  if(!l) return;
+  l.reminder = null; l.reminderNote = '';
+  save(); renderLeads(); closeModal('reminderModal');
+  toast('Reminder cleared');
+}
+
+function logActivity(leadId, type, title) {
+  const l = leads.find(x=>x.id===leadId);
+  if(!l) return;
+  if(!l.activity) l.activity=[];
+  l.activity.unshift({type, title, date: new Date().toLocaleString('en-NZ',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})});
+  save();
+}
+
+// ══ EXPORT ═══════════════════════════════════════════════════════
+function doExport(type) {
+  let rows = leads;
+  if(type==='starred')   rows = leads.filter(l=>l.starred);
+  if(type==='reminders') rows = leads.filter(l=>l.reminder);
+  const hdr = ['Name','Email','Phone','Amount','Lead Type','Status','Referrer Name','Referrer Type','Follow-up Date','Starred','Notes','Created Date'];
+  const csv = [hdr.join(','), ...rows.map(l=>[
+    l.name, l.email||'', l.phone||'', l.amount||'',
+    l.type||'', getStatus(l.statusId).label,
+    l.referrerName||l.referrer||'', l.referrerType||'',
+    l.reminder ? formatDate(l.reminder) : '',
+    l.starred?'Yes':'No', l.notes||'', l.createdAt||''
+  ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'mortgage-leads-'+type+'-'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+  closeModal('exportModal');
+  toast('Exported ↓');
+}
+
+// ══ TEMPLATES DISPLAY ════════════════════════════════════════════
+function renderTemplatesModal() {
+  document.getElementById('tplListEl').innerHTML = EMAIL_TEMPLATES.map(t=>
+    `<div class="tpl-item"><div class="tpl-item-hd"><span>${t.icon} ${t.label}</span><span class="tpl-edit-btn">Edit</span></div><div class="tpl-item-sub">${escHtml(t.subject)}</div></div>`
+  ).join('') + `<button class="add-tpl-btn-row">+ New email template</button>`;
+  document.getElementById('stplListEl').innerHTML = SMS_TEMPLATES.map(t=>
+    `<div class="tpl-item"><div class="tpl-item-hd"><span>${t.icon} ${t.label}</span><span class="tpl-edit-btn">Edit</span></div><div class="tpl-item-sub">${escHtml(t.body.substring(0,80))}…</div></div>`
+  ).join('') + `<button class="add-tpl-btn-row">+ New SMS template</button>`;
+}
+
+// ══ UTILS ════════════════════════════════════════════════════════
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if(document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+// Expose globals used in HTML onclick
+Object.assign(window, {
+  completeSetup, skipSetup, switchView, saveSettings, liveUpdateProfile, liveUpdateSig,
+  configureGmail, clearAllData, setFilter, renderColorSwatches, selectColor,
+  renderStatusList, mvSt, delSt, addStatus, saveStatuses,
+  openLeadTypeManager, renderLeadTypeList, mvLt, delLt, addLeadType, saveLeadTypes,
+  openAddLead, openEditLead, saveLead,
+  openDetail, toggleDetailStar, updateDetailStatus, openComposeFromDetail,
+  openReminderModal, quickRemind, saveReminder, clearReminder,
+  openReferrerSms, selectRefSmsTemplate, refreshRefSmsTemplate, updateRefSmsCount, sendReferrerSms,
+  openCompose, switchChannel, selectEtype, selectStype, updateCharCount,
+  handleFiles, removeAttach, sendEmail, sendSms, doExport, toggleStar, openModal, closeModal
+});
+
+// ══ INIT ═════════════════════════════════════════════════════════
+load();
+
+// Show setup screen only if no profile saved
+if(!profile.name && !profile.email) {
+  document.getElementById('setupScreen').classList.remove('hidden');
+} else {
+  document.getElementById('setupScreen').classList.add('hidden');
+}
+
+renderColorSwatches();
+renderStatusList();
+renderFilterTabs();
+populateStatusDropdowns();
+populateLeadTypeDropdown();
+renderTemplatesModal();
+renderLeads();
+applyProfile();
+switchView('home');
+</script>
+</body>
+</html>
